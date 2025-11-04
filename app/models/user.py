@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy.orm import deferred
+from sqlalchemy.orm import deferred, relationship
 from app.database import Base
 from sqlalchemy import Column, DateTime, Integer, String, func
 
@@ -18,3 +18,4 @@ class User(Base):
         onupdate=lambda: datetime.now(timezone.utc),
         nullable=False,
     )
+    bugs = relationship("Bug", back_populates="created_by", lazy="dynamic")

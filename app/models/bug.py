@@ -2,8 +2,20 @@ import enum
 from datetime import datetime, timezone
 from typing import final
 
+from sqlalchemy.orm import relationship
+
 from app.database import Base
-from sqlalchemy import Column, DateTime, Enum, Index, Integer, String, Text, func
+from sqlalchemy import (
+    Column,
+    DateTime,
+    Enum,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
+    func,
+)
 
 
 class BugStatus(enum.Enum):
@@ -35,8 +47,11 @@ class Bug(Base):
         onupdate=lambda: datetime.now(timezone.utc),
         nullable=False,
     )
+    created_by_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+    created_by = relationship("User", back_populates="bugs")
 
     __table_args__ = (
         Index("idx_bug_status", "status"),
         Index("idx_bug_priority", "priority"),
+        Index("idx_bug_created_by", "created_by_id"),
     )

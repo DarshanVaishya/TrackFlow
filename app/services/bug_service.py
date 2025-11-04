@@ -28,9 +28,12 @@ class BugService:
 
     @staticmethod
     def create_bug(db: Session, bug_data: CreateBugPayload) -> Bug:
-        """Create a new bug."""
+        """Create a new user_idbug."""
+        # TODO: Verify that the user exists before creating the bug
         try:
             new_bug = Bug(**bug_data.model_dump())
+            print(new_bug.created_by_id)
+
             db.add(new_bug)
             db.commit()
             db.refresh(new_bug)

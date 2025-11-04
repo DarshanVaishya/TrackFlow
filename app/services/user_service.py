@@ -7,10 +7,10 @@ from starlette.status import (
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
 
-from app.models.user import User
 from app.schemas.bug import UpdateBugPayload
 from app.schemas.user import CreateUserPayload, UpdateUserPayload
 from app.utils.password import hash_password
+from app.models import User
 
 # For authentication
 # def get_user_with_password(session: Session, email: str):
