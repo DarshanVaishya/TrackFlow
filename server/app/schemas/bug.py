@@ -21,7 +21,7 @@ class UpdateBugPayload(BaseModel):
     priority: Optional[PriorityStates] = None
 
 
-class BugResponse(BaseModel):
+class Bug(BaseModel):
     id: int
     title: str
     description: str
@@ -34,6 +34,12 @@ class BugResponse(BaseModel):
         from_attributes = True
 
 
+class BugResponse(BaseModel):
+    success: bool
+    data: Bug | list[Bug]
+
+
 class BugResponseWithMsg(BaseModel):
+    success: bool
     message: str
-    bug: BugResponse
+    data: Bug | list[Bug]

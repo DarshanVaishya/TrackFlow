@@ -1,9 +1,8 @@
 from typing import List, Optional
 
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
-from starlette.status import HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
 
 from app.models import Bug
 from app.schemas import BugResponseWithMsg, CreateBugPayload, UpdateBugPayload
@@ -21,7 +20,7 @@ class BugService:
         bug = db.query(Bug).filter(Bug.id == bug_id).first()
         if not bug:
             raise HTTPException(
-                status_code=HTTP_404_NOT_FOUND,
+                status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"Bug with id {bug_id} not found.",
             )
         return bug
@@ -41,7 +40,7 @@ class BugService:
         except SQLAlchemyError as e:
             db.rollback()
             raise HTTPException(
-                status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Database error: {str(e)}",
             )
 
@@ -61,7 +60,7 @@ class BugService:
         except SQLAlchemyError as e:
             db.rollback()
             raise HTTPException(
-                status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Database error: {str(e)}",
             )
 
@@ -77,6 +76,6 @@ class BugService:
         except SQLAlchemyError as e:
             db.rollback()
             raise HTTPException(
-                status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Database error: {str(e)}",
             )

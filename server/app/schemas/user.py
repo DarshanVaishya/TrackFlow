@@ -29,7 +29,7 @@ class UpdateUserPayload(BaseModel):
         return v
 
 
-class UserResponse(BaseModel):
+class User(BaseModel):
     id: int
     email: str
     created_at: datetime
@@ -39,6 +39,12 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
+class UserResponse(BaseModel):
+    success: bool
+    data: User | list[User]
+
+
 class UserResponseWithMsg(BaseModel):
-    msg: str
-    data: UserResponse
+    success: bool
+    message: str
+    data: User | list[User]

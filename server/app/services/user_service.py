@@ -1,11 +1,6 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session
-from starlette.status import (
-    HTTP_404_NOT_FOUND,
-    HTTP_409_CONFLICT,
-    HTTP_500_INTERNAL_SERVER_ERROR,
-)
 
 from app.schemas.bug import UpdateBugPayload
 from app.schemas.user import CreateUserPayload, UpdateUserPayload
@@ -37,17 +32,17 @@ class UserService:
             db.rollback()
             if "unique constraint" in str(e).lower() or "duplicate" in str(e).lower():
                 raise HTTPException(
-                    status_code=HTTP_409_CONFLICT,
+                    status_code=status.HTTP_409_CONFLICT,
                     detail="A user with this email already exists.",
                 )
             raise HTTPException(
-                status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Database integrity error: {str(e)}",
             )
         except SQLAlchemyError as e:
             db.rollback()
             raise HTTPException(
-                status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Database error: {str(e)}",
             )
 
@@ -60,7 +55,7 @@ class UserService:
         user = db.query(User).filter(User.id == user_id).first()
         if not user:
             raise HTTPException(
-                status_code=HTTP_404_NOT_FOUND,
+                status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"User with id {user_id} not found.",
             )
         return user
@@ -84,17 +79,17 @@ class UserService:
             db.rollback()
             if "unique constraint" in str(e).lower() or "duplicate" in str(e).lower():
                 raise HTTPException(
-                    status_code=HTTP_409_CONFLICT,
+                    status_code=status.HTTP_409_CONFLICT,
                     detail="A user with this email already exists.",
                 )
             raise HTTPException(
-                status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Database integrity error: {str(e)}",
             )
         except SQLAlchemyError as e:
             db.rollback()
             raise HTTPException(
-                status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Database error: {str(e)}",
             )
 
@@ -110,6 +105,6 @@ class UserService:
         except SQLAlchemyError as e:
             db.rollback()
             raise HTTPException(
-                status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Database error: {str(e)}",
             )

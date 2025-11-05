@@ -9,19 +9,22 @@ from app.schemas.user import (
     UserResponseWithMsg,
 )
 from app.services.user_service import UserService
+from app.utils.formatter import format_response
 
 
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.get("", response_model=list[UserResponse], status_code=status.HTTP_200_OK)
+@router.get("", response_model=UserResponse, status_code=status.HTTP_200_OK)
 def get_all_users(db: Session = Depends(get_db)):
-    return UserService.get_all_users(db)
+    users = UserService.get_all_users(db)
+    return format_response(users)
 
 
 @router.get("/{user_id}", response_model=UserResponse, status_code=status.HTTP_200_OK)
 def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
-    return UserService.get_user_by_id(db, user_id)
+    user = UserService.get_user_by_id(db, user_id)
+    return format_response(user)
 
 
 @router.post(
@@ -29,7 +32,7 @@ def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
 )
 def create_user(user_data: CreateUserPayload, db: Session = Depends(get_db)):
     new_user = UserService.create_user(db, user_data)
-    return {"msg": "New user created successfully.", "data": new_user}
+    return format_response(new_user, "New user created successfully.")
 
 
 @router.put(
@@ -38,8 +41,8 @@ def create_user(user_data: CreateUserPayload, db: Session = Depends(get_db)):
 def update_user(
     user_id: int, user_data: UpdateUserPayload, db: Session = Depends(get_db)
 ):
-    new_user = UserService.update_user(db, user_id, user_data)
-    return {"msg": "User data has been updated", "data": new_user}
+    updated_user = UserService.update_user(db, user_id, user_data)
+    return format_response(updated_user, "User data has been updated")
 
 
 @router.delete(
@@ -47,4 +50,4 @@ def update_user(
 )
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     deleted_user = UserService.delete_user(db, user_id)
-    return {"msg": "User has been deleted successfully.", "data": deleted_user}
+    return format_response(deleted_user, "User has been deleted successfully.")
