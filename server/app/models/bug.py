@@ -33,7 +33,7 @@ class PriorityStates(enum.Enum):
 
 
 class Bug(Base):
-    __tablename__ = "bug"
+    __tablename__: str = "bug"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(255), nullable=False)
