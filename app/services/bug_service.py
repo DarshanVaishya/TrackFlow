@@ -1,10 +1,11 @@
 from typing import List, Optional
 
-from fastapi import HTTPException, status
+from fastapi import HTTPException
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
+from starlette.status import HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
 
-from app.models import Bug, User
+from app.models import Bug
 from app.schemas import BugResponseWithMsg, CreateBugPayload, UpdateBugPayload
 
 
@@ -20,7 +21,7 @@ class BugService:
         bug = db.query(Bug).filter(Bug.id == bug_id).first()
         if not bug:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
+                status_code=HTTP_404_NOT_FOUND,
                 detail=f"Bug with id {bug_id} not found.",
             )
         return bug
@@ -28,14 +29,10 @@ class BugService:
     @staticmethod
     def create_bug(db: Session, bug_data: CreateBugPayload) -> Bug:
         """Create a new user_idbug."""
+        # TODO: Verify that the user exists before creating the bug
         try:
             new_bug = Bug(**bug_data.model_dump())
-            user = db.query(User).filter(User.id == new_bug.created_by_id).first()
-            if not user:
-                raise HTTPException(
-                    status_code=404,
-                    detail=f"User with id {new_bug.created_by_id} does not exist.",
-                )
+            print(new_bug.created_by_id)
 
             db.add(new_bug)
             db.commit()
@@ -44,7 +41,7 @@ class BugService:
         except SQLAlchemyError as e:
             db.rollback()
             raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                status_code=HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Database error: {str(e)}",
             )
 
@@ -64,7 +61,7 @@ class BugService:
         except SQLAlchemyError as e:
             db.rollback()
             raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                status_code=HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Database error: {str(e)}",
             )
 
@@ -80,6 +77,6 @@ class BugService:
         except SQLAlchemyError as e:
             db.rollback()
             raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                status_code=HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Database error: {str(e)}",
             )
