@@ -84,10 +84,11 @@ class BugService:
         try:
             update_dict = update_data.model_dump(exclude_unset=True)
 
-            fields_to_update = [k for k in update_dict.keys() if k != "password"]
+            # TODO: Create a util function to log all fields to be updated
+            fields_to_update = [k for k in update_dict.keys()]
             if fields_to_update:
                 logger.debug(
-                    f"Updating fields for user {bug_id}: {', '.join(fields_to_update)}"
+                    f"Updating fields for bug {bug_id}: {', '.join(fields_to_update)}"
                 )
             for field, value in update_dict.items():
                 setattr(bug, field, value)
