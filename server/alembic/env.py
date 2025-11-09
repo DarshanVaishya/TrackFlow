@@ -5,7 +5,7 @@ from alembic import context
 
 # Import your Base and models
 from app.database import Base
-from app.models import User, Bug
+from app.models import User, Bug, Comment
 
 # Import your settings
 from app.config import get_settings

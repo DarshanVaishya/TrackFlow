@@ -6,6 +6,7 @@ from app.config import get_settings
 from app.database import Base, engine
 from app.routers import bugs
 from app.routers import users
+from app.routers import comments
 from app.utils.exceptions import http_exception_handler, validation_exception_handler
 
 # Create database tables
@@ -25,3 +26,4 @@ app.add_exception_handler(HTTPException, http_exception_handler)
 # Include routers
 app.include_router(bugs.router)
 app.include_router(users.router)
+app.include_router(comments.router)

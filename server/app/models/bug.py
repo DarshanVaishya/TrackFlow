@@ -47,8 +47,13 @@ class Bug(Base):
         onupdate=lambda: datetime.now(timezone.utc),
         nullable=False,
     )
+
+    # User
     created_by_id = Column(Integer, ForeignKey("user.id"), nullable=False)
     created_by = relationship("User", back_populates="bugs")
+
+    # Comments
+    comments = relationship("Comment", back_populates="bug", lazy="dynamic")
 
     __table_args__ = (
         Index("idx_bug_status", "status"),
