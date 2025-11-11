@@ -1,22 +1,12 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react'
-
-import { Button, HStack } from "@chakra-ui/react"
-
-const Demo = () => {
-	return (
-		<HStack>
-			<Button>Click me</Button>
-			<Button>Click me</Button>
-		</HStack>
-	)
-}
+import App from './App'
 
 createRoot(document.getElementById('root')).render(
 	<StrictMode>
 		<ChakraProvider value={defaultSystem}>
-			<Demo />
+			<App />
 		</ChakraProvider>
 	</StrictMode>,
 )
