@@ -204,43 +204,71 @@ export default function HomePage() {
 
 			{/* Features Overview - 3 cols x 2 rows */}
 			<Box sx={{ bgcolor: colors.sectionBg, py: 8 }}>
-				<Container maxWidth="lg">
-					<Typography variant="h4" align="center" sx={{ fontWeight: 800, color: colors.primary, mb: 6 }}>
+				<Container maxWidth="xl">
+					<Typography
+						variant="h4"
+						align="center"
+						sx={{ fontWeight: 800, color: colors.primary, mb: 6 }}
+					>
 						Features Overview
 					</Typography>
-					<Grid container spacing={5} alignItems="stretch" justifyContent="center">
-						{[{
-							icon: <BugReport />,
-							title: 'Smart Issue Organization',
-							description: 'Create, categorize, and prioritize bugs with customizable fields, labels, and status workflows. Filter and search to find exactly what you need when you need it.'
-						}, {
-							icon: <Description />,
-							title: 'Detailed Issue Tracking',
-							description: 'Capture comprehensive bug details including reproduction steps, environment info, attachments, and links to commits or pull requests. Keep all context in one place so developers spend time fixing, not investigating.'
-						}, {
-							icon: <Group />,
-							title: 'Team Collaboration',
-							description: "Comment threads, assignees, and activity logs keep everyone on the same page. Track who's working on what and maintain a complete history of decisions and changes."
-						}, {
-							icon: <ViewKanban />,
-							title: 'Kanban & List Views',
-							description: 'Visualize your workflow with drag-and-drop boards or dive into detailed list views with sorting and filtering. Switch perspectives based on your current task.'
-						}, {
-							icon: <Api />,
-							title: 'API-First Design',
-							description: 'Full REST API access means you can integrate with CI/CD pipelines, automate issue creation, or build custom tooling around your workflow.'
-						}, {
-							icon: <Settings />,
-							title: 'Customizable & Extensible',
-							description: 'Add custom fields, modify issue types, and adjust workflows to match your team’s process. It’s your tracker—make it work your way.'
-						}].map((f, i) => (
-							<Grid key={i} item xs={12} sm={6} md={4}>
-								<FeatureCard {...f} />
-							</Grid>
+
+					{/* Use display: grid instead of Grid container for precise control */}
+					<Box
+						sx={{
+							display: "grid",
+							gridTemplateColumns: {
+								xs: "1fr",     // 1 column on mobile
+								sm: "repeat(2, 1fr)", // 2 columns on tablets
+								md: "repeat(3, 1fr)", // 3 columns on desktop
+							},
+							gap: 4,
+						}}
+					>
+						{[
+							{
+								icon: <BugReport />,
+								title: 'Smart Issue Organization',
+								description:
+									'Create, categorize, and prioritize bugs with customizable fields, labels, and status workflows. Filter and search to find exactly what you need when you need it.',
+							},
+							{
+								icon: <Description />,
+								title: 'Detailed Issue Tracking',
+								description:
+									'Capture comprehensive bug details including reproduction steps, environment info, attachments, and links to commits or pull requests. Keep all context in one place so developers spend time fixing, not investigating.',
+							},
+							{
+								icon: <Group />,
+								title: 'Team Collaboration',
+								description:
+									"Comment threads, assignees, and activity logs keep everyone on the same page. Track who's working on what and maintain a complete history of decisions and changes.",
+							},
+							{
+								icon: <ViewKanban />,
+								title: 'Kanban & List Views',
+								description:
+									'Visualize your workflow with drag-and-drop boards or dive into detailed list views with sorting and filtering. Switch perspectives based on your current task.',
+							},
+							{
+								icon: <Api />,
+								title: 'API-First Design',
+								description:
+									'Full REST API access means you can integrate with CI/CD pipelines, automate issue creation, or build custom tooling around your workflow.',
+							},
+							{
+								icon: <Settings />,
+								title: 'Customizable & Extensible',
+								description:
+									'Add custom fields, modify issue types, and adjust workflows to match your team’s process. It’s your tracker—make it work your way.',
+							},
+						].map((f, i) => (
+							<FeatureCard key={i} {...f} />
 						))}
-					</Grid>
+					</Box>
 				</Container>
 			</Box>
+
 
 			{/* How It Works */}
 			<Box sx={{ bgcolor: "#fff", py: 10 }}>
