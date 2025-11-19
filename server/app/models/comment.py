@@ -18,7 +18,7 @@ class Comment(Base):
 
     # Bug
     bug = relationship("Bug", back_populates="comments")
-    bug_id = Column(Integer, ForeignKey("bug.id"), nullable=False)
+    bug_id = Column(Integer, ForeignKey("bug.id", ondelete="CASCADE"), nullable=False)
 
     # User
     created_by = relationship("User", back_populates="comments")

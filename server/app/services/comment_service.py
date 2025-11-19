@@ -44,7 +44,7 @@ class CommentService:
         try:
             logger.debug(f"Fetching all comments from bug with id {bug_id}.")
             bug = BugService.get_bug_by_id(db, bug_id)
-            comments = bug.comments.all()
+            comments = bug.comments
             logger.info(f"Successfully fetched {len(comments)} comments.")
             return comments
         except SQLAlchemyError as e:

@@ -53,7 +53,9 @@ class Bug(Base):
     created_by = relationship("User", back_populates="bugs")
 
     # Comments
-    comments = relationship("Comment", back_populates="bug", lazy="dynamic")
+    comments = relationship(
+        "Comment", back_populates="bug", cascade="all, delete-orphan"
+    )
 
     __table_args__ = (
         Index("idx_bug_status", "status"),
