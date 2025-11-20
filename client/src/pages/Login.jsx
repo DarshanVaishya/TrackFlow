@@ -1,15 +1,26 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Navbar from "../components/Navbar";
 import { BlueButton } from "../components/utils/Buttons";
 import Container from "../components/utils/Container";
 import TextInput from "../components/utils/TextInput";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { AuthContext } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function LoginPage() {
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const [error, setError] = useState(null)
 	const [isLogin, setIsLogin] = useState(true)
+	const { user, setUser } = useContext(AuthContext)
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (user)
+			navigate("/bugs")
+	}, [user, navigate])
 
 	const handleLogin = async (e) => {
 		e.preventDefault()
@@ -22,6 +33,9 @@ export default function LoginPage() {
 			const token = data.data.access_token
 			localStorage.setItem("accessToken", token)
 			axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+			const { user } = jwtDecode(token)
+			setUser(user)
 		} catch (e) {
 			const response = e.response.data
 			setError(response.message)

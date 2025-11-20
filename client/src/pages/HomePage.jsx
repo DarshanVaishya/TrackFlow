@@ -1,14 +1,14 @@
+import { useContext } from "react";
 import Navbar from "../components/Navbar";
 import { BlackButton, BlueButton } from "../components/utils/Buttons";
 import Container from "../components/utils/Container";
+import { AuthContext } from "../contexts/AuthContext";
 
 export default function HomePage() {
+	// TODO: Add rest of the sections
 	return (
 		<Container>
 			<Navbar>
-				<a href="/login">
-					<BlueButton>Get Started</BlueButton>
-				</a>
 			</Navbar>
 
 			{/* Hero section */}

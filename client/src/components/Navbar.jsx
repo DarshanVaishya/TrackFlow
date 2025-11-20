@@ -1,6 +1,22 @@
-import { BlueButton } from "./utils/Buttons";
+import { useContext } from "react";
+import { BlackButton, BlueButton } from "./utils/Buttons";
+import { AuthContext } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Navbar({ children }) {
+	const { user, setUser } = useContext(AuthContext)
+	const navigate = useNavigate();
+
+
+	const handleLogout = () => {
+		console.log("LOGGING OUT")
+		localStorage.removeItem("accessToken");
+		setUser(null);
+		axios.defaults.headers.common['Authorization'] = undefined;
+		navigate("/login");
+	};
+
 	return (
 		<nav className="bg-black fixed w-full z-20 top-0 left-0 py-1 border-b border-gray-700 p-2 px-12">
 			<div className="flex flex-wrap items-center justify-between mx-auto p-2">
@@ -20,8 +36,9 @@ export default function Navbar({ children }) {
 					</svg>
 				</button>
 
-				<div className="hidden w-full md:flex md:w-auto md:items-center" id="navbar-menu">
+				<div className="hidden w-full md:flex md:w-auto md:items-center gap-4" id="navbar-menu">
 					{children}
+					{!user ? <BlueButton onClick={() => navigate("/login")}>Login</BlueButton> : <BlackButton onClick={handleLogout}>Log out</BlackButton>}
 				</div>
 			</div>
 		</nav>
