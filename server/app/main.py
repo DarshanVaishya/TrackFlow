@@ -8,6 +8,7 @@ from app.routers import bugs
 from app.routers import users
 from app.routers import comments
 from app.utils.exceptions import http_exception_handler, validation_exception_handler
+from app.routers import auth
 
 # Create database tables
 # Base.metadata.drop_all(bind=engine)
@@ -27,3 +28,4 @@ app.add_exception_handler(HTTPException, http_exception_handler)
 app.include_router(bugs.router)
 app.include_router(users.router)
 app.include_router(comments.router)
+app.include_router(auth.router)
