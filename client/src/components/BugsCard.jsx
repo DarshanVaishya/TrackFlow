@@ -3,17 +3,17 @@ import Priority from "./utils/Priority"
 import Spinner from "./utils/Spinner"
 import Status from "./utils/status"
 
-function FormatDate(isoDate, Time = false) {
+export function FormatDate(isoDate, Time = false) {
 	const dateObj = new Date(isoDate);
 
 	const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
-	const optionsTime = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+	const optionsTime = { hour: '2-digit', minute: '2-digit' };
 
 	const formattedDate = dateObj.toLocaleDateString(undefined, optionsDate);
 	const formattedTime = dateObj.toLocaleTimeString(undefined, optionsTime);
 
 	if (Time)
-		return `${formattedDate} at ${formattedTime}`;
+		return `${formattedDate}, ${formattedTime}`;
 	else
 		return `${formattedDate}`;
 }

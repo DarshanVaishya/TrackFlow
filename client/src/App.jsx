@@ -5,6 +5,7 @@ import BugsPage from './pages/BugsPage.jsx';
 import { useContext, useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { AuthContext } from './contexts/AuthContext.jsx';
+import BugPage from './pages/BugPage.jsx';
 
 export default function App() {
 	const { setUser } = useContext(AuthContext)
@@ -27,6 +28,7 @@ export default function App() {
 			<Route path='/' element={<HomePage />} />
 			<Route path='/login' element={<LoginPage />} />
 			<Route path='/bugs' element={<BugsPage />} />
+			<Route path='/bugs/:bug_id' element={<BugPage />} />
 		</Routes>
 	);
 }
