@@ -27,6 +27,7 @@ export default function CommentCard({ comment, userId, commentsState }) {
 		})
 	}
 
+	// TODO: Fix the look of edit and delete buttons
 	return (
 		<div className="bg-neutral-900/60 border-1 border-neutral-500/50 rounded p-5 mt-3">
 			<div className="flex justify-between">

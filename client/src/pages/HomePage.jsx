@@ -28,7 +28,7 @@ export default function HomePage() {
 
 				<div className="flex justify-center items-center gap-5 pt-5">
 					<BlueButton>
-						<a href="/login">Quick start guide</a>
+						<a href="/login">Get Started</a>
 					</BlueButton>
 					<BlackButton>
 						<a href="https://www.github.com/DarshanVaishya/TrackFlow">View on github</a>

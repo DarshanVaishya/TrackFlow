@@ -1,6 +1,6 @@
-export function BlueButton({ children, onClick = null, className = null }) {
+export function BlueButton({ children, onClick = null, className = null, type = "" }) {
 	return (
-		<button className={"bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none hover:cursor-pointer " + className} onClick={onClick}>{children}</button>
+		<button type={type} className={"bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none hover:cursor-pointer " + className} onClick={onClick}>{children}</button>
 	)
 }
 

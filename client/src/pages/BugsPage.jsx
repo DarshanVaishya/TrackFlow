@@ -4,7 +4,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Container from "../components/utils/Container";
-import { BlueButton } from "../components/utils/Buttons";
+import { BlackButton, BlueButton } from "../components/utils/Buttons";
 import axios from "axios";
 import Spinner from "../components/utils/Spinner";
 import BugsCard from "../components/BugsCard";
@@ -59,11 +59,14 @@ export default function BugsPage() {
 		<>
 			<Container>
 				<Navbar>
-					<BlueButton>New Bug</BlueButton>
+					<BlackButton onClick={() => navigate("/")}>← Back to Home</BlackButton>
 				</Navbar>
 
 				<div className="pt-18 flex flex-col gap-5">
-					<h1 className="text-4xl font-bold pt-5">Bug Tracker</h1>
+					<div className="flex justify-between items-center">
+						<h1 className="text-4xl font-bold pt-5">Bug Tracker</h1>
+						<BlueButton onClick={() => navigate("/bugs/new")} className="mt-5">New Bug</BlueButton>
+					</div>
 					<span className="text-neutral-500">Manage and track all your bugs in one place</span>
 					<div className="flex gap-5 fill pb-5">
 						<CountCard count={counts.todo} label="todo" />
