@@ -10,7 +10,6 @@ export default function Navbar({ children }) {
 
 
 	const handleLogout = () => {
-		console.log("LOGGING OUT")
 		localStorage.removeItem("accessToken");
 		setUser(null);
 		axios.defaults.headers.common['Authorization'] = undefined;

@@ -5,7 +5,7 @@ from app.services.user_service import UserService
 from app.utils.logger import logger
 from fastapi import HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 
 class CommentService:
@@ -44,7 +44,13 @@ class CommentService:
         try:
             logger.debug(f"Fetching all comments from bug with id {bug_id}.")
             bug = BugService.get_bug_by_id(db, bug_id)
-            comments = bug.comments
+            # comments = bug.comments
+            comments = (
+                db.query(Comment)
+                .options(joinedload(Comment.created_by))
+                .filter(Comment.bug_id == bug_id)
+                .all()
+            )
             logger.info(f"Successfully fetched {len(comments)} comments.")
             return comments
         except SQLAlchemyError as e:
@@ -67,6 +73,10 @@ class CommentService:
             db.add(new_comment)
             db.commit()
             db.refresh(new_comment)
+
+            # Only to load the data
+            _ = new_comment.created_by
+
             logger.info(
                 "Successfully created new comment: "
                 f"ID: {new_comment.id}, "

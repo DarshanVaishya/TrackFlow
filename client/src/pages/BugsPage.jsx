@@ -50,7 +50,6 @@ export default function BugsPage() {
 	useEffect(() => {
 		axios.get("http://localhost:8000/bugs").then(response => {
 			const bugs = response.data.data
-			console.log(bugs)
 			setBugs(bugs)
 			setCounts(getCounts(bugs))
 		})

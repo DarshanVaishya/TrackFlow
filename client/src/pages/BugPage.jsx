@@ -2,11 +2,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { BlackButton, BlueButton } from "../components/utils/Buttons";
 import Container from "../components/utils/Container";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Status from "../components/utils/status";
 import Priority from "../components/utils/Priority";
 import { FormatDate } from "../components/BugsCard";
+import CommentsSection from "../components/CommentsSection";
+import { AuthContext } from "../contexts/AuthContext";
 
 export default function BugPage() {
 	const navigate = useNavigate()
@@ -66,6 +68,8 @@ export default function BugPage() {
 								<span><span className="text-neutral-500">Updated:</span> {FormatDate(bug.updated_at, true)}</span>
 							</div>
 						</div>
+
+						<CommentsSection setComments={setComments} bugId={bug_id} comments={comments} />
 					</>}
 			</div>
 

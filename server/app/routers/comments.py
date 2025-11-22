@@ -30,7 +30,7 @@ def update_coment(
     return format_response(updated_comment, "Comment updated successfully")
 
 
-@router.delete("/comment/{comment_id}")
+@router.delete("/comments/{comment_id}")
 def delete_comment(comment_id: int, db: Session = Depends(get_db)):
     deleted_comment = CommentService.delete_comment(db, comment_id)
     return format_response(deleted_comment, "Comment deleted successfully")
