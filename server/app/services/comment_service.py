@@ -112,6 +112,9 @@ class CommentService:
 
             db.commit()
             db.refresh(comment)
+
+            _ = comment.created_by
+
             logger.info(
                 f"Successfully updated comment - ID: {comment_id}, Content: {comment.content}"
             )
