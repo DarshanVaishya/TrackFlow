@@ -29,6 +29,7 @@ class Bug(BaseModel):
     priority: PriorityStates
     created_at: datetime
     updated_at: datetime
+    created_by_id: int
 
     class Config:
         from_attributes = True

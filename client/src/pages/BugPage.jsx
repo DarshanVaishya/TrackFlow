@@ -13,6 +13,7 @@ import { AuthContext } from "../contexts/AuthContext";
 export default function BugPage() {
 	const navigate = useNavigate()
 	const { bug_id } = useParams();
+	const { user } = useContext(AuthContext)
 	const [bug, setBug] = useState(null)
 	const [comments, setComments] = useState(null)
 	const [error, setError] = useState(null)
@@ -33,8 +34,9 @@ export default function BugPage() {
 			})
 	}, [bug_id])
 
+	// TODO: Add delete button
 	return (
-		<Container>
+		<Container className="max-w-5xl">
 			<Navbar>
 				<BlackButton onClick={() => navigate("/bugs")}>← Back to Bugs</BlackButton>
 			</Navbar>
@@ -49,7 +51,7 @@ export default function BugPage() {
 							<div className="flex-1">
 								<div className="flex justify-between">
 									<h1 className="text-3xl">{bug.title}</h1>
-									<BlueButton>Edit Bug</BlueButton>
+									{user.user.id === bug.created_by_id && <BlueButton>Edit Bug</BlueButton>}
 								</div>
 
 								<div className="flex gap-5 mt-5">
