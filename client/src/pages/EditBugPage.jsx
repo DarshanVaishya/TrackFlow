@@ -7,7 +7,6 @@ import SelectInput from "../components/utils/SelectInput";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-// TODO: Protect this route
 export default function EditBugPage() {
 	const navigate = useNavigate()
 	const { bug_id } = useParams()
@@ -42,7 +41,7 @@ export default function EditBugPage() {
 	return (
 		<Container>
 			<Navbar>
-				<BlackButton onClick={() => navigate("/bugs")}>← Back to Bugs</BlackButton>
+				<BlackButton onClick={() => navigate(`/bugs/${bug_id}`)}>← Back to the Bug</BlackButton>
 			</Navbar>
 			<div className="h-screen flex justify-center items-center" onSubmit={handleSubmit}>
 				<form className="p-5 border border-neutral-500/50 rounded min-w-xl">

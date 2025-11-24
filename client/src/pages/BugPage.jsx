@@ -9,12 +9,11 @@ import Priority from "../components/utils/Priority";
 import { FormatDate } from "../components/BugsCard";
 import CommentsSection from "../components/CommentsSection";
 import { AuthContext } from "../contexts/AuthContext";
-import Spinner from "../components/utils/Spinner";
 
 export default function BugPage() {
 	const navigate = useNavigate()
 	const { bug_id } = useParams();
-	const { user, loading } = useContext(AuthContext)
+	const { user } = useContext(AuthContext)
 	const [bug, setBug] = useState(null)
 	const [comments, setComments] = useState(null)
 	const [error, setError] = useState(null)
@@ -59,9 +58,9 @@ export default function BugPage() {
 						<div className="flex gap-5 pt-10">
 							<span className="text-neutral-500 text-lg">#{bug.id}</span>
 							<div className="flex-1">
-								<div className="flex justify-between">
+								<div className="flex flex-col justify-between sm:flex-row">
 									<h1 className="text-3xl">{bug.title}</h1>
-									{user.user.id === bug.created_by_id && <div className="flex gap-5">
+									{user.user.id === bug.created_by_id && <div className="flex gap-5 pt-5 sm:pt-0">
 										<BlueButton onClick={() => navigate(`/bugs/${bug.id}/edit`)}>Edit Bug</BlueButton>
 										<RedButton onClick={handleDelete}>Delete Bug</RedButton>
 									</div>}
@@ -78,7 +77,7 @@ export default function BugPage() {
 							<h1 className="font-bold">Description</h1>
 							<p className="whitespace-pre-line mt-5 mb-10 text-neutral-400">{bug.description}</p>
 							<hr className="my-4 border-neutral-700" />
-							<div className="flex justify-between">
+							<div className="flex flex-col justify-between sm:flex-row">
 								<span><span className="text-neutral-500">Created:</span> {FormatDate(bug.created_at, true)}</span>
 								<span><span className="text-neutral-500">Updated:</span> {FormatDate(bug.updated_at, true)}</span>
 							</div>

@@ -1,54 +1,56 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import Navbar from "../components/Navbar";
-import { AuthContext } from "../contexts/AuthContext";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Container from "../components/utils/Container";
 import { BlackButton, BlueButton } from "../components/utils/Buttons";
 import axios from "axios";
-import Spinner from "../components/utils/Spinner";
 import BugsCard from "../components/BugsCard";
 import CountCard from "../components/utils/CountCard";
-
-function getCounts(bugs) {
-	if (!bugs) return { todo: 0, inProgress: 0, inReview: 0, done: 0 };
-
-	return bugs.reduce((acc, bug) => {
-		switch (bug.status.toLowerCase()) {
-			case 'todo':
-				acc.todo += 1;
-				break;
-			case 'in_progress':
-				acc.inProgress += 1;
-				break;
-			case 'in_review':
-				acc.inReview += 1;
-				break;
-			case 'done':
-				acc.done += 1;
-				break;
-			default:
-				break;
-		}
-		return acc;
-	}, { todo: 0, inProgress: 0, inReview: 0, done: 0 });
-}
-
+import Spinner from "../components/utils/Spinner";
+import { Filter, Plus } from "lucide-react"
+import SelectInput from "../components/utils/SelectInput";
 
 export default function BugsPage() {
-	const { user, loading } = useContext(AuthContext)
 	const navigate = useNavigate()
 
 	const [bugs, setBugs] = useState(null)
-	const [counts, setCounts] = useState({})
+	const [filtBugs, setFiltBugs] = useState(null)
+	const [search, setSearch] = useState("")
+	const [status, setStatus] = useState("all")
+	const [priority, setPriority] = useState("all")
+
 
 	useEffect(() => {
 		axios.get("http://localhost:8000/bugs").then(response => {
 			const bugs = response.data.data
 			setBugs(bugs)
-			setCounts(getCounts(bugs))
+			setFiltBugs(bugs)
 		})
 	}, [])
+
+	useEffect(() => {
+		if (!bugs) return;
+		const loweredSearch = search.toLowerCase();
+
+		let filtered = bugs.filter(bug =>
+			bug.title.toLowerCase().includes(loweredSearch) ||
+			bug.description?.toLowerCase().includes(loweredSearch)
+		);
+
+		if (status != "all") {
+			console.log(status)
+			filtered = filtered.filter(bug => bug.status === status)
+		}
+
+		if (priority != "all")
+			filtered = filtered.filter(bug => bug.priority === priority)
+
+		setFiltBugs(filtered);
+	}, [search, bugs, status, priority]);
+
+	if (!bugs)
+		return <Spinner />
 
 	return (
 		<>
@@ -60,19 +62,40 @@ export default function BugsPage() {
 				<div className="pt-18 flex flex-col gap-5">
 					<div className="flex justify-between items-center">
 						<h1 className="text-4xl font-bold pt-5">Bug Tracker</h1>
-						<BlueButton onClick={() => navigate("/bugs/new")} className="mt-5">New Bug</BlueButton>
+						<BlueButton className="flex items-center mt-5" onClick={() => navigate("/bugs/new")} >
+							<Plus />
+							New Bug</BlueButton>
 					</div>
-					<span className="text-neutral-500">Manage and track all your bugs in one place</span>
-					<div className="flex gap-5 fill pb-5">
-						<CountCard count={counts.todo} label="todo" />
-						<CountCard count={counts.inProgress} label="In Progress" />
-						<CountCard count={counts.inReview} label="In Review" />
-						<CountCard count={counts.done} label="Done" />
-					</div>
+					<span className="text-neutral-500 pb-5">Manage and track all your bugs in one place</span>
 				</div>
 
+				<div className="mb-5 p-5 bg-neutral-900/50 border border-neutral-500/50 rounded">
+					<div className="flex gap-2 items-center mb-5">
+						<Filter className="h-4 w-4" />
+						<p>Filters</p>
+					</div>
+
+					<div className="flex flex-col gap-3 items-center sm:flex-row">
+						<input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search" className="px-2 py-1 outline-none border border-neutral-500/50 rounded" />
+
+						<select className="border border-neutral-500/50 p-2 px-4 rounded" label="status" value={status} onChange={e => setStatus(e.target.value)}>
+							<option value="all">All Statuses</option>
+							<option value="todo">Todo</option>
+							<option value="in_progress">In Progress</option>
+							<option value="in_review">In Review</option>
+							<option value="done">Done</option>
+						</select>
+						<select className="border border-neutral-500/50 p-2 px-4 rounded" label="priority" value={priority} onChange={e => setPriority(e.target.value)}>
+							<option value="all">All Priorities</option>
+							<option value="low">Low</option>
+							<option value="medium">Medium</option>
+							<option value="high">High</option>
+							<option value="top">Top</option>
+						</select>
+					</div>
+				</div>
 				<div className="flex flex-col gap-5 pb-10">
-					<BugsCard bugs={bugs} />
+					<BugsCard bugs={filtBugs} />
 				</div>
 
 			</Container>

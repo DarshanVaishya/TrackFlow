@@ -31,11 +31,11 @@ export default function BugsCard({ bugs }) {
 				<div className="flex flex-col gap-2">
 					<h2 className="font-bold">{bug.title}</h2>
 					<p className="text-neutral-400">{bug.description}</p>
-					<div className="flex gap-5 p-2">
+					<div className="grid grid-cols-2 gap-2 p-2 md:flex md:gap-5">
 						<Status status={bug.status} />
 						<Priority priority={bug.priority} />
-						<span className="text-neutral-500 text-sm py-1">Created {FormatDate(bug.created_at)}</span>
-						<span className="text-neutral-500 text-sm py-1">Updated {FormatDate(bug.updated_at)}</span>
+						<span className="col-span-2 text-neutral-500 text-sm py-1">Created {FormatDate(bug.created_at)}</span>
+						<span className="col-span-2 text-neutral-500 text-sm py-1">Updated {FormatDate(bug.updated_at)}</span>
 					</div>
 				</div>
 			</div>

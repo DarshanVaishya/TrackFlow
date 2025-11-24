@@ -3,6 +3,7 @@ import { BlackButton, BlueButton } from "./utils/Buttons";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { LogIn, LogOut, Terminal } from "lucide-react"
 
 export default function Navbar({ children }) {
 	const { user, setUser } = useContext(AuthContext)
@@ -20,11 +21,7 @@ export default function Navbar({ children }) {
 		<nav className="bg-black fixed w-full z-20 top-0 left-0 py-1 border-b border-gray-700 p-2 px-12">
 			<div className="flex flex-wrap items-center justify-between mx-auto p-2">
 				<a href="/" className="flex items-center space-x-3">
-					<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-terminal h-6 w-6 text-blue-500">
-						<polyline points="4 17 10 11 4 5"></polyline>
-						<line x1="12" x2="20" y1="19" y2="19"></line>
-					</svg>
-
+					<Terminal className="text-blue-500" />
 					<span className="text-white text-xl font-semibold">TrackFlow</span>
 				</a>
 
@@ -37,7 +34,7 @@ export default function Navbar({ children }) {
 
 				<div className="hidden w-full md:flex md:w-auto md:items-center gap-4" id="navbar-menu">
 					{children}
-					{!user ? <BlueButton onClick={() => navigate("/login")}>Login</BlueButton> : <BlackButton onClick={handleLogout}>Log out</BlackButton>}
+					{!user ? <BlueButton className="flex gap-2 items-center" onClick={() => navigate("/login")}><LogIn className="h-4 w-4" />Login</BlueButton> : <BlackButton className="flex gap-2 items-center" onClick={handleLogout}><LogOut className="h-4 w-4" />Log out</BlackButton>}
 				</div>
 			</div>
 		</nav>

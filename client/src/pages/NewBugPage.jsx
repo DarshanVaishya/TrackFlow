@@ -8,7 +8,6 @@ import { useContext, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
 
-// TODO: Protect this route
 export default function NewBugPage() {
 	const navigate = useNavigate()
 	const [title, setTitle] = useState("")
