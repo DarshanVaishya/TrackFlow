@@ -35,7 +35,7 @@ export default function CommentsSection({ bugId, comments, setComments }) {
 			{/* Post comment box */}
 			<div className="p-5 border border-neutral-500/50 mt-3 mb-5 bg-neutral-900/50 rounded">
 				<div>
-					<textarea className="w-full p-2 rounded border-1 border-neutral-600/50 bg-black text-white focus:outline-none focus:ring-1 focus:ring-blue-500 min-h-32" value={content} onChange={e => setContent(e.target.value)} placeholder="Add a comment..." />
+					<textarea className="w-full p-2 rounded border border-neutral-600/50 bg-black text-white focus:outline-none focus:ring-1 focus:ring-blue-500 min-h-32" value={content} onChange={e => setContent(e.target.value)} placeholder="Add a comment..." />
 				</div>
 				<BlueButton onClick={handleSubmit} className="mt-3">Post Comment</BlueButton>
 			</div>

@@ -7,7 +7,7 @@ import HomePage from './pages/HomePage.jsx';
 import Navbar from './components/Navbar.jsx';
 import LoginPage from './pages/Login.jsx';
 import App from './App.jsx';
-import { AuthProvider } from './contexts/AuthContext.jsx';
+import { AuthProvider } from './contexts/AuthProvider.jsx';
 
 createRoot(document.getElementById('root')).render(
 	<StrictMode>

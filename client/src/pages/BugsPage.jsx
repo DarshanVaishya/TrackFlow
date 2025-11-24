@@ -36,16 +36,11 @@ function getCounts(bugs) {
 
 
 export default function BugsPage() {
-	const { user } = useContext(AuthContext)
+	const { user, loading } = useContext(AuthContext)
 	const navigate = useNavigate()
 
 	const [bugs, setBugs] = useState(null)
 	const [counts, setCounts] = useState({})
-
-	useEffect(() => {
-		if (!user)
-			navigate("/login")
-	}, [user, navigate])
 
 	useEffect(() => {
 		axios.get("http://localhost:8000/bugs").then(response => {

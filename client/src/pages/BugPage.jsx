@@ -9,11 +9,12 @@ import Priority from "../components/utils/Priority";
 import { FormatDate } from "../components/BugsCard";
 import CommentsSection from "../components/CommentsSection";
 import { AuthContext } from "../contexts/AuthContext";
+import Spinner from "../components/utils/Spinner";
 
 export default function BugPage() {
 	const navigate = useNavigate()
 	const { bug_id } = useParams();
-	const { user } = useContext(AuthContext)
+	const { user, loading } = useContext(AuthContext)
 	const [bug, setBug] = useState(null)
 	const [comments, setComments] = useState(null)
 	const [error, setError] = useState(null)
@@ -73,7 +74,7 @@ export default function BugPage() {
 							</div>
 						</div>
 
-						<div className="border-1 mt-5 border-neutral-500/50 rounded p-5">
+						<div className="border mt-5 border-neutral-500/50 rounded p-5">
 							<h1 className="font-bold">Description</h1>
 							<p className="whitespace-pre-line mt-5 mb-10 text-neutral-400">{bug.description}</p>
 							<hr className="my-4 border-neutral-700" />

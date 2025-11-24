@@ -4,10 +4,10 @@ import { BlackButton, BlueButton } from "../components/utils/Buttons";
 import Container from "../components/utils/Container";
 import TextInput from "../components/utils/TextInput";
 import SelectInput from "../components/utils/SelectInput";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { AuthContext } from "../contexts/AuthContext";
 
+// TODO: Protect this route
 export default function EditBugPage() {
 	const navigate = useNavigate()
 	const { bug_id } = useParams()
@@ -15,7 +15,6 @@ export default function EditBugPage() {
 	const [description, setDescription] = useState("")
 	const [status, setStatus] = useState("todo")
 	const [priority, setPriority] = useState("low")
-	const { user } = useContext(AuthContext)
 
 	useEffect(() => {
 		axios.get(`http://localhost:8000/bugs/${bug_id}`)
@@ -26,7 +25,7 @@ export default function EditBugPage() {
 				setStatus(bug.status)
 				setPriority(bug.priority)
 			})
-	}, [])
+	}, [bug_id])
 
 	const handleSubmit = (e) => {
 		e.preventDefault()

@@ -77,7 +77,7 @@ export default function LoginPage() {
 					<p className="text-neutral-500 text-lg">{isLogin ? "Sign in to your TrackFlow Account" : "Sign up for a TrackFlow Account"}</p>
 
 					{/* Login box */}
-					<form className="border-neutral-500/30 bg-neutral-900/40 border-1 p-8 flex flex-col gap-2 rounded-lg min-w-lg" onSubmit={isLogin ? handleLogin : handleSignUp}>
+					<form className="border-neutral-500/30 bg-neutral-900/40 border p-8 flex flex-col gap-2 rounded-lg min-w-lg" onSubmit={isLogin ? handleLogin : handleSignUp}>
 						<h2 className="text-2xl">{isLogin ? "Login" : "Sign Up"}</h2>
 						{error ? <span className="text-red-400 bg-red-900/30 self-center py-2 px-4 rounded-4xl">{error}</span> : ""}
 						<TextInput label="Email" type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} />
