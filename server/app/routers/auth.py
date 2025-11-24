@@ -36,7 +36,7 @@ def login_user(login: LoginRequest, db: Session = Depends(get_db)):
             status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid credentials"
         )
 
-    token = create_access_token({"user_id": str(user.id)})
+    token = create_access_token({"user": {"email": user.email, "id": user.id}})
 
     return TokenResponse(access_token=token)
 
