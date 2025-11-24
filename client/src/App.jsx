@@ -7,6 +7,7 @@ import { jwtDecode } from 'jwt-decode';
 import { AuthContext } from './contexts/AuthContext.jsx';
 import BugPage from './pages/BugPage.jsx';
 import NewBugPage from './pages/NewBugPage.jsx';
+import EditBugPage from './pages/EditBugPage.jsx';
 
 export default function App() {
 	const { setUser } = useContext(AuthContext)
@@ -31,6 +32,7 @@ export default function App() {
 			<Route path='/bugs' element={<BugsPage />} />
 			<Route path='/bugs/:bug_id' element={<BugPage />} />
 			<Route path='/bugs/new' element={<NewBugPage />} />
+			<Route path='/bugs/:bug_id/edit' element={<EditBugPage />} />
 		</Routes>
 	);
 }

@@ -52,7 +52,7 @@ export default function CommentCard({ comment, userId, commentsState }) {
 						<BlueButton onClick={handleUpdate}>Submit</BlueButton>
 					</div>
 					:
-					<span className="whitespace-pre-line">{comment.content}</span>
+					<span className="whitespace-pre-line text-neutral-400/90">{comment.content}</span>
 			}
 		</div>
 	)

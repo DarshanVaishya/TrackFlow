@@ -107,6 +107,7 @@ class BugService:
                 detail=f"Database error: {str(e)}",
             )
 
+    # TODO: Make sure created_bu_id and request user id are the same before deleting
     @staticmethod
     def delete_bug(db: Session, bug_id: int) -> Bug:
         logger.debug(f"Attempting to delete bug - ID: {bug_id}")

@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import { BlackButton, BlueButton } from "../components/utils/Buttons";
+import { BlackButton, BlueButton, RedButton } from "../components/utils/Buttons";
 import Container from "../components/utils/Container";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
@@ -34,7 +34,16 @@ export default function BugPage() {
 			})
 	}, [bug_id])
 
-	// TODO: Add delete button
+	const handleDelete = () => {
+		const agree = confirm("Do you want to DELETE this bug? This action irreversible.")
+		if (!agree)
+			return
+
+		axios.delete(`http://localhost:8000/bugs/${bug_id}`).then(
+			() => navigate("/bugs")
+		)
+	}
+
 	return (
 		<Container className="max-w-5xl">
 			<Navbar>
@@ -51,7 +60,10 @@ export default function BugPage() {
 							<div className="flex-1">
 								<div className="flex justify-between">
 									<h1 className="text-3xl">{bug.title}</h1>
-									{user.user.id === bug.created_by_id && <BlueButton>Edit Bug</BlueButton>}
+									{user.user.id === bug.created_by_id && <div className="flex gap-5">
+										<BlueButton onClick={() => navigate(`/bugs/${bug.id}/edit`)}>Edit Bug</BlueButton>
+										<RedButton onClick={handleDelete}>Delete Bug</RedButton>
+									</div>}
 								</div>
 
 								<div className="flex gap-5 mt-5">
