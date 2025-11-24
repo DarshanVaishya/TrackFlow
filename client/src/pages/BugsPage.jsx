@@ -49,9 +49,6 @@ export default function BugsPage() {
 		setFiltBugs(filtered);
 	}, [search, bugs, status, priority]);
 
-	if (!bugs)
-		return <Spinner />
-
 	return (
 		<>
 			<Container>
@@ -78,14 +75,14 @@ export default function BugsPage() {
 					<div className="flex flex-col gap-3 items-center sm:flex-row">
 						<input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search" className="px-2 py-1 outline-none border border-neutral-500/50 rounded" />
 
-						<select className="border border-neutral-500/50 p-2 px-4 rounded" label="status" value={status} onChange={e => setStatus(e.target.value)}>
+						<select className="border border-neutral-500/50 p-2 px-3 rounded" label="status" value={status} onChange={e => setStatus(e.target.value)}>
 							<option value="all">All Statuses</option>
 							<option value="todo">Todo</option>
 							<option value="in_progress">In Progress</option>
 							<option value="in_review">In Review</option>
 							<option value="done">Done</option>
 						</select>
-						<select className="border border-neutral-500/50 p-2 px-4 rounded" label="priority" value={priority} onChange={e => setPriority(e.target.value)}>
+						<select className="border border-neutral-500/50 p-2 px-3 rounded" label="priority" value={priority} onChange={e => setPriority(e.target.value)}>
 							<option value="all">All Priorities</option>
 							<option value="low">Low</option>
 							<option value="medium">Medium</option>
@@ -94,9 +91,13 @@ export default function BugsPage() {
 						</select>
 					</div>
 				</div>
-				<div className="flex flex-col gap-5 pb-10">
-					<BugsCard bugs={filtBugs} />
-				</div>
+
+				{bugs ?
+					<div className="flex flex-col gap-5 pb-10">
+						<BugsCard bugs={filtBugs} />
+					</div>
+					: <Spinner />
+				}
 
 			</Container>
 		</>

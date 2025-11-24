@@ -21,3 +21,4 @@ class User(Base):
 
     bugs = relationship("Bug", back_populates="created_by", lazy="dynamic")
     comments = relationship("Comment", back_populates="created_by", lazy="dynamic")
+    projects = relationship("Project", back_populates="created_by")

@@ -2,17 +2,23 @@ from fastapi import HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
-from app.models import Bug, User
+from app.models import Bug, Project, User
 from app.schemas import CreateBugPayload, UpdateBugPayload
 from app.utils.logger import logger
 
 
 class BugService:
     @staticmethod
-    def get_all_bugs(db: Session) -> list[Bug]:
+    def get_all_bugs(project_id: int, db: Session) -> list[Bug]:
         try:
-            logger.debug("Fetching all bugs from database.")
-            bugs = db.query(Bug).all()
+            logger.debug(f"Fetching all bugs from project {project_id}.")
+            project = db.query(Project).filter(Project.id == project_id).first()
+            if not project:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"Project with id {project_id} not found.",
+                )
+            bugs = project.bugs
             logger.info(f"Successfully fetched {len(bugs)} bugs.")
             return bugs
         except SQLAlchemyError as e:

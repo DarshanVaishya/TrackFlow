@@ -12,6 +12,7 @@ class CreateBugPayload(BaseModel):
     status: BugStatus
     priority: PriorityStates
     created_by_id: int
+    project_id: int
 
 
 class UpdateBugPayload(BaseModel):

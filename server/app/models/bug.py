@@ -57,6 +57,10 @@ class Bug(Base):
         "Comment", back_populates="bug", cascade="all, delete-orphan"
     )
 
+    # Project
+    project_id = Column(Integer, ForeignKey("project.id"), nullable=False)
+    project = relationship("Project", back_populates="bugs")
+
     __table_args__ = (
         Index("idx_bug_status", "status"),
         Index("idx_bug_priority", "priority"),
