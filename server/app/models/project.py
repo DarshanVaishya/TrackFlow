@@ -23,7 +23,12 @@ class Project(Base):
     )
 
     # Bugs
-    bugs = relationship("Bug", back_populates="project", cascade="all, delete-orphan")
+    bugs = relationship(
+        "Bug",
+        back_populates="project",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
 
     __table_args__ = (
         Index("idx_project_title", "title"),

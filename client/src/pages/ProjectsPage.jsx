@@ -26,13 +26,13 @@ export default function ProjectsPage() {
 			<div className="pt-18 flex flex-col gap-5">
 				<div className="flex justify-between items-center">
 					<h1 className="text-4xl font-bold pt-5">Projects</h1>
-					<BlueButton className="flex items-center mt-5" onClick={() => navigate("/bugs/new")} >
+					<BlueButton className="flex items-center mt-5" onClick={() => navigate("/projects/new")} >
 						New Project</BlueButton>
 				</div>
 				<span className="text-neutral-500 pb-5">Manage your projects and track bugs across your organization</span>
 			</div>
 			{projects ? <div>
-				{projects.map(project => <ProjectCard key={project.id} handleClick={() => navigate(`/projects/${project.id}/bugs`)} project={project} />)}
+				{projects.map(project => <ProjectCard key={project.id} projects={projects} setProjects={setProjects} handleClick={() => navigate(`/projects/${project.id}/bugs`)} project={project} />)}
 			</div>
 				:
 				<Spinner />}

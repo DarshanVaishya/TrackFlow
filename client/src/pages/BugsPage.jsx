@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
-import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react"; import { useNavigate, useParams } from "react-router-dom";
 import Container from "../components/utils/Container";
 import { BlackButton, BlueButton } from "../components/utils/Buttons";
 import axios from "axios";
@@ -15,6 +14,7 @@ export default function BugsPage() {
 	const navigate = useNavigate()
 
 	const { project_id } = useParams()
+	const [project, setProject] = useState(null)
 	const [bugs, setBugs] = useState(null)
 	const [filtBugs, setFiltBugs] = useState(null)
 	const [search, setSearch] = useState("")
@@ -24,10 +24,11 @@ export default function BugsPage() {
 
 
 	useEffect(() => {
-		axios.get(`http://localhost:8000/projects/${project_id}/bugs`).then(response => {
-			const bugs = response.data.data
-			setBugs(bugs)
-			setFiltBugs(bugs)
+		axios.get(`http://localhost:8000/projects/${project_id}`).then(response => {
+			const { data } = response.data
+			setProject(data)
+			setBugs(data.bugs)
+			setFiltBugs(data.bugs)
 		}).catch(response => {
 			const data = response.response.data
 			setError(data.message)
@@ -54,6 +55,9 @@ export default function BugsPage() {
 		setFiltBugs(filtered);
 	}, [search, bugs, status, priority]);
 
+	if (!project)
+		return <Spinner />
+
 	return (
 		<>
 			<Container>
@@ -63,12 +67,12 @@ export default function BugsPage() {
 
 				<div className="pt-18 flex flex-col gap-5">
 					<div className="flex justify-between items-center">
-						<h1 className="text-4xl font-bold pt-5">Bug Tracker</h1>
+						<h1 className="text-4xl font-bold pt-5 capitalize">Project: {project.title}</h1>
 						<BlueButton className="flex items-center mt-5" onClick={() => navigate(`/projects/${project_id}/bugs/new`)} >
 							<Plus />
 							New Bug</BlueButton>
 					</div>
-					<span className="text-neutral-500 pb-5">Manage and track all your bugs in one place</span>
+					<span className="text-neutral-500 pb-5">Description: {project.description}</span>
 				</div>
 
 				<div className="mb-5 p-5 bg-neutral-900/50 border border-neutral-500/50 rounded">
@@ -104,6 +108,8 @@ export default function BugsPage() {
 					</div>
 					: <Spinner />
 				)}
+
+				{bugs.length == 0 && <h1 className="text-3xl text-center">Create bugs to start tracking them!</h1>}
 
 			</Container>
 		</>
