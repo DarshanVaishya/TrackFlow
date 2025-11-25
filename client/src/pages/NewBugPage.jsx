@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { BlackButton, BlueButton } from "../components/utils/Buttons";
 import Container from "../components/utils/Container";
@@ -15,6 +15,7 @@ export default function NewBugPage() {
 	const [status, setStatus] = useState("todo")
 	const [priority, setPriority] = useState("low")
 	const { user } = useContext(AuthContext)
+	const { project_id } = useParams()
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
@@ -23,9 +24,10 @@ export default function NewBugPage() {
 			description,
 			status,
 			priority,
-			created_by_id: user.user.id
+			created_by_id: user.user.id,
+			project_id: project_id
 		}).then(() => {
-			navigate("/bugs")
+			navigate(`/projects/${project_id}/bugs`)
 		})
 	}
 

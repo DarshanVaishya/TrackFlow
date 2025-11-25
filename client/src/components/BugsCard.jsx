@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Priority from "./utils/Priority"
 import Spinner from "./utils/Spinner"
 import Status from "./utils/status"
@@ -20,12 +20,13 @@ export function FormatDate(isoDate, Time = false) {
 
 export default function BugsCard({ bugs }) {
 	const navigate = useNavigate()
+	const { project_id } = useParams()
 
 	if (!bugs)
 		return <Spinner />
 
 	return (
-		bugs.map(bug => <div onClick={() => navigate(`/bugs/${bug.id}`)} className="p-5 border-1 border-neutral-500/50 bg-neutral-900/40 rounded-lg hover:cursor-pointer hover:border-blue-500" key={bug.id}>
+		bugs.map(bug => <div onClick={() => navigate(`/projects/${project_id}/bugs/${bug.id}`)} className="p-5 border-1 border-neutral-500/50 bg-neutral-900/40 rounded-lg hover:cursor-pointer hover:border-blue-500" key={bug.id}>
 			<div className="flex gap-5">
 				<span className="text-neutral-400">#{bug.id}</span>
 				<div className="flex flex-col gap-2">

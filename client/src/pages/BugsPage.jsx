@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Container from "../components/utils/Container";
 import { BlackButton, BlueButton } from "../components/utils/Buttons";
 import axios from "axios";
@@ -14,20 +14,25 @@ import SelectInput from "../components/utils/SelectInput";
 export default function BugsPage() {
 	const navigate = useNavigate()
 
+	const { project_id } = useParams()
 	const [bugs, setBugs] = useState(null)
 	const [filtBugs, setFiltBugs] = useState(null)
 	const [search, setSearch] = useState("")
 	const [status, setStatus] = useState("all")
 	const [priority, setPriority] = useState("all")
+	const [error, setError] = useState(null)
 
 
 	useEffect(() => {
-		axios.get("http://localhost:8000/bugs").then(response => {
+		axios.get(`http://localhost:8000/projects/${project_id}/bugs`).then(response => {
 			const bugs = response.data.data
 			setBugs(bugs)
 			setFiltBugs(bugs)
+		}).catch(response => {
+			const data = response.response.data
+			setError(data.message)
 		})
-	}, [])
+	}, [project_id])
 
 	useEffect(() => {
 		if (!bugs) return;
@@ -53,13 +58,13 @@ export default function BugsPage() {
 		<>
 			<Container>
 				<Navbar>
-					<BlackButton onClick={() => navigate("/")}>← Back to Home</BlackButton>
+					<BlackButton onClick={() => navigate("/projects")}>← Back to Projects</BlackButton>
 				</Navbar>
 
 				<div className="pt-18 flex flex-col gap-5">
 					<div className="flex justify-between items-center">
 						<h1 className="text-4xl font-bold pt-5">Bug Tracker</h1>
-						<BlueButton className="flex items-center mt-5" onClick={() => navigate("/bugs/new")} >
+						<BlueButton className="flex items-center mt-5" onClick={() => navigate(`/projects/${project_id}/bugs/new`)} >
 							<Plus />
 							New Bug</BlueButton>
 					</div>
@@ -92,12 +97,13 @@ export default function BugsPage() {
 					</div>
 				</div>
 
-				{bugs ?
+				{error && <div className="flex items-center justify-center"><p className="text-red-500 bg-red-800/30 mt-10 px-10 py-5 inline-block rounded-xl">{error}</p></div>}
+				{!error && (bugs ?
 					<div className="flex flex-col gap-5 pb-10">
 						<BugsCard bugs={filtBugs} />
 					</div>
 					: <Spinner />
-				}
+				)}
 
 			</Container>
 		</>

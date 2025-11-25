@@ -44,6 +44,7 @@ class ProjectService:
             logger.info(
                 f"Successfully retreived project - ID: {project_id}, title: {project.title}"
             )
+            _ = project.bugs
             return project
         except HTTPException:
             raise

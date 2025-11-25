@@ -12,7 +12,7 @@ import { AuthContext } from "../contexts/AuthContext";
 
 export default function BugPage() {
 	const navigate = useNavigate()
-	const { bug_id } = useParams();
+	const { bug_id, project_id } = useParams();
 	const { user } = useContext(AuthContext)
 	const [bug, setBug] = useState(null)
 	const [comments, setComments] = useState(null)
@@ -40,14 +40,14 @@ export default function BugPage() {
 			return
 
 		axios.delete(`http://localhost:8000/bugs/${bug_id}`).then(
-			() => navigate("/bugs")
+			() => navigate(`/projects/${project_id}/bugs`)
 		)
 	}
 
 	return (
 		<Container className="max-w-5xl">
 			<Navbar>
-				<BlackButton onClick={() => navigate("/bugs")}>← Back to Bugs</BlackButton>
+				<BlackButton onClick={() => navigate(`/projects/${project_id}/bugs`)}>← Back to Bugs</BlackButton>
 			</Navbar>
 
 			<div className="pt-16">
@@ -61,7 +61,7 @@ export default function BugPage() {
 								<div className="flex flex-col justify-between sm:flex-row">
 									<h1 className="text-3xl">{bug.title}</h1>
 									{user.user.id === bug.created_by_id && <div className="flex gap-5 pt-5 sm:pt-0">
-										<BlueButton onClick={() => navigate(`/bugs/${bug.id}/edit`)}>Edit Bug</BlueButton>
+										<BlueButton onClick={() => navigate(`/projects/${project_id}/bugs/${bug.id}/edit`)}>Edit Bug</BlueButton>
 										<RedButton onClick={handleDelete}>Delete Bug</RedButton>
 									</div>}
 								</div>

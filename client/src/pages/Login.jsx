@@ -19,7 +19,7 @@ export default function LoginPage() {
 
 	useEffect(() => {
 		if (user)
-			navigate("/bugs")
+			navigate("/projects")
 	}, [user, navigate])
 
 	const handleLogin = async (e) => {

@@ -9,7 +9,7 @@ import axios from "axios";
 
 export default function EditBugPage() {
 	const navigate = useNavigate()
-	const { bug_id } = useParams()
+	const { bug_id, project_id } = useParams()
 	const [title, setTitle] = useState("")
 	const [description, setDescription] = useState("")
 	const [status, setStatus] = useState("todo")
@@ -34,14 +34,14 @@ export default function EditBugPage() {
 			status,
 			priority,
 		}).then(() => {
-			navigate(`/bugs/${bug_id}`)
+			navigate(`/projects/${project_id}/bugs/${bug_id}`)
 		})
 	}
 
 	return (
 		<Container>
 			<Navbar>
-				<BlackButton onClick={() => navigate(`/bugs/${bug_id}`)}>← Back to the Bug</BlackButton>
+				<BlackButton onClick={() => navigate(`/projects/${project_id}/bugs/${bug_id}`)}>← Back to the Bug</BlackButton>
 			</Navbar>
 			<div className="h-screen flex justify-center items-center" onSubmit={handleSubmit}>
 				<form className="p-5 border border-neutral-500/50 rounded min-w-xl">
