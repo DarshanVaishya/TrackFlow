@@ -1,14 +1,19 @@
 import { FolderKanban, Bug } from "lucide-react"
 import { FormatDate } from "./BugsCard"
-import { useContext } from "react"
+import { useContext, useMemo } from "react"
 import { AuthContext } from "../contexts/AuthContext"
-import { Pencil, Trash2, Users } from "lucide-react"
+import { Pencil, Trash2, Users, CircleCheckBig } from "lucide-react"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 
 export default function ProjectCard({ project, handleClick, setProjects, projects }) {
 	const { user } = useContext(AuthContext)
 	const navigate = useNavigate()
+
+	const bugsDone = useMemo(() => {
+		const val = project.bugs.filter(bug => bug.status === "done").length
+		return val;
+	}, [project])
 
 	const handleEdit = e => {
 		e.stopPropagation()
@@ -45,8 +50,12 @@ export default function ProjectCard({ project, handleClick, setProjects, project
 				<p className="text-base text-neutral-400 mb-2">{project.description}</p>
 				<div className="flex gap-5">
 					<span className="flex gap-2 items-center text-neutral-400">
-						<Bug className="h-5 w-5 text-white" />
+						<Bug className="h-5 w-5 text-red-700" />
 						{project.bugs.length} bugs
+					</span>
+					<span className="flex gap-2 items-center text-neutral-400">
+						<CircleCheckBig className="h-5 w-5 text-green-600" />
+						{bugsDone} Done
 					</span>
 					<span className="flex gap-2 items-center text-neutral-400">
 						<Users className="h-5 w-5 text-white" />

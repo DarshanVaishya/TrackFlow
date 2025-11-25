@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { BlackButton, BlueButton, RedButton } from "../components/utils/Buttons";
 import Container from "../components/utils/Container";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import Status from "../components/utils/status";
 import Priority from "../components/utils/Priority";
@@ -25,7 +25,16 @@ export default function BugPage() {
 	const [allUsers, setAllUsers] = useState([]);
 	const [loadingUsers, setLoadingUsers] = useState(false);
 
-	// Only show users from this project
+	const isOwner = useMemo(() => {
+		if (!bug || !user) return
+		return user.id === bug.created_by_id
+	}, [bug, user])
+
+	const canEdit = useMemo(() => {
+		if (!bug || !user) return
+		return bug.assignees.some(u => u.id === user.id)
+	}, [bug, user])
+
 	useEffect(() => {
 		if (showModal) {
 			setLoadingUsers(true);
@@ -84,14 +93,14 @@ export default function BugPage() {
 						<div className="flex gap-5 pt-10">
 							<span className="text-neutral-500 text-lg">#{bug.id}</span>
 							<div className="flex-1">
-								{user.id === bug.created_by_id && <div className="flex shrink-0 gap-5 pb-3 sm:pt-0 items-start">
-									<BlackButton onClick={() => setShowModal(true)} className="flex gap-1 shrink-0 items-center">
+								<div className="flex shrink-0 gap-5 items-start">
+									{isOwner && <BlackButton onClick={() => setShowModal(true)} className="flex gap-1 shrink-0 items-center">
 										<UserPlus className="h-4 w-4" />
 										Assign Users
-									</BlackButton>
-									<BlueButton className="shrink-0" onClick={() => navigate(`/projects/${project_id}/bugs/${bug.id}/edit`)}>Edit Bug</BlueButton>
-									<RedButton className="shrink-0" onClick={handleDelete}>Delete Bug</RedButton>
-								</div>}
+									</BlackButton>}
+									{canEdit && <BlueButton className="shrink-0 mb-5" onClick={() => navigate(`/projects/${project_id}/bugs/${bug.id}/edit`)}>Edit Bug</BlueButton>}
+									{isOwner && <RedButton className="shrink-0" onClick={handleDelete}>Delete Bug</RedButton>}
+								</div>
 								<div className="flex flex-col justify-between sm:flex-row">
 									<h1 className="text-3xl">{bug.title}</h1>
 								</div>
@@ -133,7 +142,6 @@ export default function BugPage() {
 			</div>
 
 			{/* Modal */}
-
 			{showModal && (
 				<div className="fixed inset-0 bg-black/70 flex justify-center items-center">
 					<div className="bg-neutral-900 p-6 rounded max-w-md w-full">
@@ -191,8 +199,6 @@ export default function BugPage() {
 					</div>
 				</div>
 			)}
-
-
 		</Container>
 	)
 }
