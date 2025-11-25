@@ -9,6 +9,9 @@ import NewBugPage from './pages/NewBugPage.jsx';
 import EditBugPage from './pages/EditBugPage.jsx';
 import ProtectedRoute from './contexts/ProtectedRoute.jsx';
 import { AuthContext } from './contexts/AuthContext.jsx';
+import ProjectsPage from './pages/ProjectsPage.jsx';
+import NewProjectPage from './pages/NewProjectPage.jsx';
+import EditProjectPage from './pages/EditProjectPage.jsx';
 
 export default function App() {
 	const { setUser, setLoading } = useContext(AuthContext)
@@ -17,7 +20,8 @@ export default function App() {
 		const token = localStorage.getItem("accessToken");
 		if (token) {
 			try {
-				const user = jwtDecode(token);
+				const data = jwtDecode(token);
+				const user = data.user
 				setUser(user);
 			} catch (e) {
 				console.error("Failed to decode token:", e);
@@ -34,10 +38,13 @@ export default function App() {
 
 			{/* Protected routes */}
 			<Route element={<ProtectedRoute />}>
-				<Route path='/bugs' element={<BugsPage />} />
-				<Route path='/bugs/:bug_id' element={<BugPage />} />
-				<Route path='/bugs/new' element={<NewBugPage />} />
-				<Route path='/bugs/:bug_id/edit' element={<EditBugPage />} />
+				<Route path='/projects' element={<ProjectsPage />} />
+				<Route path='/projects/new' element={<NewProjectPage />} />
+				<Route path='/projects/:project_id/edit' element={<EditProjectPage />} />
+				<Route path='/projects/:project_id/bugs' element={<BugsPage />} />
+				<Route path='/projects/:project_id/bugs/:bug_id' element={<BugPage />} />
+				<Route path='/projects/:project_id/bugs/new' element={<NewBugPage />} />
+				<Route path='/projects/:project_id/bugs/:bug_id/edit' element={<EditBugPage />} />
 			</Route>
 		</Routes>
 	);

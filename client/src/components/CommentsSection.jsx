@@ -12,7 +12,7 @@ export default function CommentsSection({ bugId, comments, setComments }) {
 	const handleSubmit = () => {
 		axios.post(`http://localhost:8000/comments`, {
 			"content": content,
-			"created_by_id": user.user.id,
+			"created_by_id": user.id,
 			"bug_id": bugId
 		}).then(data => {
 			const newComment = data.data.data
@@ -42,7 +42,7 @@ export default function CommentsSection({ bugId, comments, setComments }) {
 
 			{/* Comments */}
 			<div>
-				{comments.map(comment => <CommentCard key={comment.id} comment={comment} userId={user.user.id} commentsState={{ comments, setComments }} />)}
+				{comments.map(comment => <CommentCard key={comment.id} comment={comment} userId={user.id} commentsState={{ comments, setComments }} />)}
 			</div>
 
 			<div className="pt-10" />

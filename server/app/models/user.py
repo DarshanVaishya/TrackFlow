@@ -4,6 +4,9 @@ from sqlalchemy.orm import deferred, relationship
 from app.database import Base
 from sqlalchemy import Column, DateTime, Integer, String, func
 
+from app.models.project import project_members
+from app.models.bug import bug_assignees
+
 
 class User(Base):
     __tablename__ = "user"
@@ -21,3 +24,16 @@ class User(Base):
 
     bugs = relationship("Bug", back_populates="created_by", lazy="dynamic")
     comments = relationship("Comment", back_populates="created_by", lazy="dynamic")
+    projects = relationship("Project", back_populates="created_by")
+
+    projects_member_of = relationship(
+        "Project",
+        secondary=project_members,
+        back_populates="members",
+    )
+
+    assigned_bugs = relationship(
+        "Bug",
+        secondary=bug_assignees,
+        back_populates="assignees",
+    )
