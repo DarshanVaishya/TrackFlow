@@ -10,6 +10,7 @@ import { FormatDate } from "../components/BugsCard";
 import CommentsSection from "../components/CommentsSection";
 import { AuthContext } from "../contexts/AuthContext";
 import Spinner from "../components/utils/Spinner";
+import { UserPen, ClockPlus, CalendarClock } from "lucide-react"
 
 export default function BugPage() {
 	const navigate = useNavigate()
@@ -26,7 +27,6 @@ export default function BugPage() {
 				const bug = response.data.data
 				setBug(bug)
 				axios.get(`http://localhost:8000/users/${bug.created_by_id}`).then(response => {
-					console.log(response.data.data)
 					setCreator(response.data.data)
 				})
 			})
@@ -41,7 +41,6 @@ export default function BugPage() {
 				const data = e.response.data
 				setError(data.message)
 			})
-
 	}, [bug_id])
 
 	const handleDelete = () => {
@@ -88,15 +87,15 @@ export default function BugPage() {
 							<p className="whitespace-pre-line mt-5 mb-10 text-neutral-400">{bug.description}</p>
 							<hr className="my-4 border-neutral-700" />
 							<div className="flex flex-col justify-between md:flex-row">
-								<span className="flex"><span className="text-neutral-500 mr-1">Author: </span>
+								<span className="flex"><span className="text-neutral-500 mr-2"><UserPen /></span>
 									{creator ?
 										creator.email
 										:
 										<Spinner size="w-6 h-6" />
 									}
 								</span>
-								<span><span className="text-neutral-500">Created:</span> {FormatDate(bug.created_at, true)}</span>
-								<span><span className="text-neutral-500">Updated:</span> {FormatDate(bug.updated_at, true)}</span>
+								<span className="flex"><span className="text-neutral-500 mr-2"><ClockPlus /></span> {FormatDate(bug.created_at, true)}</span>
+								<span className="flex"><span className="text-neutral-500 mr-2"><CalendarClock /></span> {FormatDate(bug.updated_at, true)}</span>
 							</div>
 						</div>
 

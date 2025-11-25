@@ -95,15 +95,16 @@ export default function EditProjectPage() {
 								<BlueButton onClick={handleAddMembers} size="py-1 px-2">Add Members</BlueButton>
 							</div>
 							{project.members.map(user =>
-								<div key={user.id} className="py-4 flex justify-between items-center">
+								<div key={user.id} className="py-1 flex justify-between items-center">
 									<span>{user.email}</span>
-									<div className="p-2 bg-red-500/50 rounded">
-										<Trash2 onClick={() => removeMember(user.id)} className="h-5 w-5" />
-									</div>
+									{project.created_by_id == user.id ? "" :
+										<div className="p-2 bg-red-500/50 rounded">
+											<Trash2 onClick={() => removeMember(user.id)} className="h-5 w-5" />
+										</div>}
 								</div>
 							)}
 						</div>
-						<BlueButton type="submit">Update Project</BlueButton>
+						<BlueButton className="mt-5" type="submit">Update Project</BlueButton>
 					</div>
 				</form>
 			</div>
