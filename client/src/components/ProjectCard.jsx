@@ -10,6 +10,11 @@ export default function ProjectCard({ project, handleClick, setProjects, project
 	const { user } = useContext(AuthContext)
 	const navigate = useNavigate()
 
+	const handleEdit = e => {
+		e.stopPropagation()
+		navigate(`/projects/${project.id}/edit`)
+	}
+
 	const handleDelete = (e) => {
 		e.stopPropagation()
 		const agree = confirm("Do you want to DELETE this project? All the bugs and comments inside will be permenantly deleted.")
@@ -29,7 +34,7 @@ export default function ProjectCard({ project, handleClick, setProjects, project
 					<h3 className="text-2xl mb-3">{project.title}</h3>
 					<div className="flex items-center">
 						{user.user.id === project.created_by_id && <div className="flex gap-3">
-							<button className="hidden group-hover:flex px-2 py-1 rounded hover:bg-green-500/50 justify-center items-center hover:cursor-pointer">
+							<button onClick={handleEdit} className="hidden group-hover:flex px-2 py-1 rounded hover:bg-green-500/50 justify-center items-center hover:cursor-pointer">
 								<Pencil className="h-5 w-5" />
 							</button>
 							<button onClick={handleDelete} className="hidden group-hover:flex px-2 py-1 rounded hover:bg-red-500/50 justify-center items-center hover:cursor-pointer">

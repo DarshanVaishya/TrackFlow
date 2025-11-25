@@ -11,6 +11,7 @@ import ProtectedRoute from './contexts/ProtectedRoute.jsx';
 import { AuthContext } from './contexts/AuthContext.jsx';
 import ProjectsPage from './pages/ProjectsPage.jsx';
 import NewProjectPage from './pages/NewProjectPage.jsx';
+import EditProjectPage from './pages/EditProjectPage.jsx';
 
 export default function App() {
 	const { setUser, setLoading } = useContext(AuthContext)
@@ -38,6 +39,7 @@ export default function App() {
 			<Route element={<ProtectedRoute />}>
 				<Route path='/projects' element={<ProjectsPage />} />
 				<Route path='/projects/new' element={<NewProjectPage />} />
+				<Route path='/projects/:project_id/edit' element={<EditProjectPage />} />
 				<Route path='/projects/:project_id/bugs' element={<BugsPage />} />
 				<Route path='/projects/:project_id/bugs/:bug_id' element={<BugPage />} />
 				<Route path='/projects/:project_id/bugs/new' element={<NewBugPage />} />

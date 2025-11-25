@@ -38,5 +38,6 @@ def update_project(
 
 @router.delete("/{project_id}")
 def delete_project(project_id: int, db: Session = Depends(get_db)):
-    project = ProjectService.delete_project(db, project_id)
-    return format_response(project, "Project deleted successfully.")
+    ProjectService.delete_project(db, project_id)
+    # return format_response(project, "Project deleted successfully.")
+    return {"message": "Project deleted successfully"}

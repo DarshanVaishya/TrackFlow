@@ -59,7 +59,7 @@ class Bug(Base):
 
     # Project
     project_id = Column(
-        Integer, ForeignKey("project.id", ondelete="CASCASDE"), nullable=False
+        Integer, ForeignKey("project.id", ondelete="CASCADE"), nullable=False
     )
     project = relationship("Project", back_populates="bugs")
 
