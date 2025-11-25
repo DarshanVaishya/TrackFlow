@@ -1,6 +1,4 @@
-# Template repo
-
-A template repo to speed up process of setting up new projects.
+# TrackFlow - Track your bugs at ease!
 
 ## Table of contents
 
