@@ -177,9 +177,15 @@ class ProjectService:
             .join(Project.members)
             .filter(User.id == user_id)
             .options(
-                joinedload(Project.bugs),  # eager load bugs for each project
-                joinedload(Project.members),  # eager load members for each project
+                joinedload(Project.bugs),
+                joinedload(Project.members),
             )
             .all()
         )
         return projects
+
+    @staticmethod
+    def get_all_users_for_project(db: Session, project_id: int):
+        project = ProjectService.get_project_by_id(db, project_id)
+        users = project.members
+        return users

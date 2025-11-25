@@ -10,7 +10,8 @@ import { FormatDate } from "../components/BugsCard";
 import CommentsSection from "../components/CommentsSection";
 import { AuthContext } from "../contexts/AuthContext";
 import Spinner from "../components/utils/Spinner";
-import { UserPen, ClockPlus, CalendarClock } from "lucide-react"
+import { UserPen, ClockPlus, CalendarClock, UserPlus } from "lucide-react"
+import NameCard from "../components/utils/NameCard";
 
 export default function BugPage() {
 	const navigate = useNavigate()
@@ -20,6 +21,22 @@ export default function BugPage() {
 	const [comments, setComments] = useState(null)
 	const [error, setError] = useState(null)
 	const [creator, setCreator] = useState(null)
+	const [showModal, setShowModal] = useState(false);
+	const [allUsers, setAllUsers] = useState([]);
+	const [loadingUsers, setLoadingUsers] = useState(false);
+
+	// Only show users from this project
+	useEffect(() => {
+		if (showModal) {
+			setLoadingUsers(true);
+			axios.get(`http://localhost:8000/projects/${project_id}/users`)
+				.then(response => {
+					setAllUsers(response.data.data);
+					setLoadingUsers(false);
+				})
+				.catch(() => setLoadingUsers(false));
+		}
+	}, [showModal, project_id]);
 
 	useEffect(() => {
 		axios.get(`http://localhost:8000/bugs/${bug_id}`)
@@ -67,12 +84,16 @@ export default function BugPage() {
 						<div className="flex gap-5 pt-10">
 							<span className="text-neutral-500 text-lg">#{bug.id}</span>
 							<div className="flex-1">
+								{user.id === bug.created_by_id && <div className="flex shrink-0 gap-5 pb-3 sm:pt-0 items-start">
+									<BlackButton onClick={() => setShowModal(true)} className="flex gap-1 shrink-0 items-center">
+										<UserPlus className="h-4 w-4" />
+										Assign Users
+									</BlackButton>
+									<BlueButton className="shrink-0" onClick={() => navigate(`/projects/${project_id}/bugs/${bug.id}/edit`)}>Edit Bug</BlueButton>
+									<RedButton className="shrink-0" onClick={handleDelete}>Delete Bug</RedButton>
+								</div>}
 								<div className="flex flex-col justify-between sm:flex-row">
 									<h1 className="text-3xl">{bug.title}</h1>
-									{user.id === bug.created_by_id && <div className="flex gap-5 pt-5 sm:pt-0">
-										<BlueButton onClick={() => navigate(`/projects/${project_id}/bugs/${bug.id}/edit`)}>Edit Bug</BlueButton>
-										<RedButton onClick={handleDelete}>Delete Bug</RedButton>
-									</div>}
 								</div>
 
 								<div className="flex gap-5 mt-5">
@@ -82,11 +103,19 @@ export default function BugPage() {
 							</div>
 						</div>
 
+
 						<div className="border mt-5 border-neutral-500/50 rounded p-5">
 							<h1 className="font-bold">Description</h1>
 							<p className="whitespace-pre-line mt-5 mb-10 text-neutral-400">{bug.description}</p>
 							<hr className="my-4 border-neutral-700" />
-							<div className="flex flex-col justify-between md:flex-row">
+							<div>
+								<p>Assigned To</p>
+								<div className="flex gap-5 mt-2 flex-wrap">
+									{bug.assignees.length == 0 ? <span className="font-bold">None</span> :
+										bug.assignees.map(user => <NameCard key={user.id} email={user.email} />)}
+								</div>
+							</div>
+							<div className="flex flex-col justify-between md:flex-row mt-5">
 								<span className="flex"><span className="text-neutral-500 mr-2"><UserPen /></span>
 									{creator ?
 										creator.email
@@ -102,6 +131,67 @@ export default function BugPage() {
 						<CommentsSection setComments={setComments} bugId={bug_id} comments={comments} />
 					</>}
 			</div>
+
+			{/* Modal */}
+
+			{showModal && (
+				<div className="fixed inset-0 bg-black/70 flex justify-center items-center">
+					<div className="bg-neutral-900 p-6 rounded max-w-md w-full">
+						<h3 className="text-xl font-bold mb-5 text-white">Add Member to Project</h3>
+						{loadingUsers ? (
+							<div>Loading users...</div>
+						) : (
+							<form className="max-h-60 overflow-auto">
+								{allUsers.map(user => {
+									const isChecked = bug.assignees.some(m => m.id === user.id);
+
+									const handleCheckboxChange = async (event) => {
+										try {
+											let response;
+											if (event.target.checked) {
+												response = await axios.post(`http://localhost:8000/bugs/${bug.id}/assign/${user.id}`);
+											} else {
+												response = await axios.delete(`http://localhost:8000/bugs/${bug.id}/unassign/${user.id}`);
+											}
+											// Update the local bug state with the response data
+											setBug(response.data.data);
+										} catch (error) {
+											console.error('Error updating assignment:', error);
+										}
+									};
+
+									return (
+										<label
+											key={user.id}
+											className="flex justify-between items-center py-2 border-b border-neutral-700 cursor-pointer"
+										>
+											<span>{user.email}</span>
+											<label className="flex items-center cursor-pointer mr-3">
+												<input
+													type="checkbox"
+													checked={isChecked}
+													onChange={handleCheckboxChange}
+													className="peer hidden"
+												/>
+												<span className="w-5 h-5 inline-block border-2 border-gray-500 rounded-sm 
+                   peer-checked:bg-blue-500 "></span>
+											</label>
+
+										</label>
+									);
+								})}
+							</form>
+						)}
+						<RedButton
+							className="mt-5"
+							onClick={() => setShowModal(false)}
+						>
+							Close
+						</RedButton>
+					</div>
+				</div>
+			)}
+
 
 		</Container>
 	)

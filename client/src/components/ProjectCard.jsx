@@ -25,7 +25,6 @@ export default function ProjectCard({ project, handleClick, setProjects, project
 		})
 	}
 
-	// TODO: Add edit method
 	return (
 		<div onClick={handleClick} className="group flex gap-5 p-5 bg-neutral-900/50 border border-neutral-500/50 rounded cursor-pointer hover:border-blue-500 mb-3">
 			<FolderKanban className="h-8 w-8 text-blue-500" />

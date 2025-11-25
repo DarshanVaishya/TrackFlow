@@ -4,6 +4,7 @@ from typing import Optional
 from pydantic import BaseModel, Field
 
 from app.models.bug import BugStatus, PriorityStates
+from app.models import User
 
 
 class CreateBugPayload(BaseModel):

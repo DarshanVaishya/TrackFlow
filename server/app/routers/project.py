@@ -63,3 +63,12 @@ def get_projects_for_user(user_id: int, db: Session = Depends(get_db)):
     return format_response(
         projects, f"Successfully fetched all projects for user {user_id}"
     )
+
+
+@router.get("/{project_id}/users")
+def get_all_users_for_project(project_id: int, db: Session = Depends(get_db)):
+    users = ProjectService.get_all_users_for_project(db, project_id)
+    return format_response(
+        users,
+        f"Successfully fetched all users from the project {project_id}",
+    )

@@ -20,7 +20,7 @@ def get_all_bugs(project_id: int, db: Session = Depends(get_db)):
     return format_response(bugs)
 
 
-@router.get("/bugs/{bug_id}", response_model=BugResponse)
+@router.get("/bugs/{bug_id}")
 def get_a_bug(bug_id: int, db: Session = Depends(get_db)):
     bug = BugService.get_bug_by_id(db, bug_id)
     return format_response(bug)
@@ -46,3 +46,17 @@ def update_bug(
 def delete_bug(bug_id: int, db: Session = Depends(get_db)):
     bug = BugService.delete_bug(db, bug_id)
     return format_response(bug, f"Bug with id {bug_id} deleted successfully")
+
+
+@router.post("/bugs/{bug_id}/assign/{user_id}")
+def assign_user_to_bug(bug_id: int, user_id: int, db: Session = Depends(get_db)):
+    bug = BugService.assign_user_to_bug(bug_id, user_id, db)
+    return format_response(bug, f"Successfully assign user {user_id} to bug {bug_id}")
+
+
+@router.delete("/bugs/{bug_id}/unassign/{user_id}")
+def unassign_user_to_bug(bug_id: int, user_id: int, db: Session = Depends(get_db)):
+    bug = BugService.unassign_user_to_bug(bug_id, user_id, db)
+    return format_response(
+        bug, f"Successfully unassigned user {user_id} from bug {bug_id}"
+    )

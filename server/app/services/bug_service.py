@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from app.models import Bug, Project, User
 from app.schemas import CreateBugPayload, UpdateBugPayload
 from app.utils.logger import logger
+from app.services.user_service import UserService
 
 
 class BugService:
@@ -41,6 +42,7 @@ class BugService:
             logger.info(
                 f"Successfully retrieved bug - ID: {bug_id}, title: {bug.title}"
             )
+            _ = bug.assignees
             return bug
         except HTTPException:
             raise
@@ -133,3 +135,25 @@ class BugService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Database error: {str(e)}",
             )
+
+    @staticmethod
+    def assign_user_to_bug(bug_id: int, user_id: int, db: Session):
+        bug = BugService.get_bug_by_id(db, bug_id)
+        user = UserService.get_user_by_id(db, user_id)
+
+        bug.assignees.append(user)
+        db.commit()
+        db.refresh(bug)
+        _ = bug.assignees
+        return bug
+
+    @staticmethod
+    def unassign_user_to_bug(bug_id: int, user_id: int, db: Session):
+        bug = BugService.get_bug_by_id(db, bug_id)
+        user = UserService.get_user_by_id(db, user_id)
+
+        bug.assignees.remove(user)
+        db.commit()
+        db.refresh(bug)
+        _ = bug.assignees
+        return bug
