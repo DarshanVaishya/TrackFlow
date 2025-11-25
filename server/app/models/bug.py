@@ -13,6 +13,7 @@ from sqlalchemy import (
     Index,
     Integer,
     String,
+    Table,
     Text,
     func,
 )
@@ -30,6 +31,18 @@ class PriorityStates(enum.Enum):
     medium = "medium"
     high = "high"
     top = "top"
+
+
+bug_assignees = Table(
+    "bug_assignees",
+    Base.metadata,
+    Column(
+        "bug_id", Integer, ForeignKey("bug.id", ondelete="CASCADE"), primary_key=True
+    ),
+    Column(
+        "user_id", Integer, ForeignKey("user.id", ondelete="CASCADE"), primary_key=True
+    ),
+)
 
 
 class Bug(Base):
@@ -62,6 +75,12 @@ class Bug(Base):
         Integer, ForeignKey("project.id", ondelete="CASCADE"), nullable=False
     )
     project = relationship("Project", back_populates="bugs")
+
+    assignees = relationship(
+        "User",
+        secondary=bug_assignees,
+        back_populates="assigned_bugs",
+    )
 
     __table_args__ = (
         Index("idx_bug_status", "status"),

@@ -41,3 +41,25 @@ def delete_project(project_id: int, db: Session = Depends(get_db)):
     ProjectService.delete_project(db, project_id)
     # return format_response(project, "Project deleted successfully.")
     return {"message": "Project deleted successfully"}
+
+
+@router.post("/{project_id}/members/add/{user_id}")
+def add_member_to_project(user_id: int, project_id: int, db: Session = Depends(get_db)):
+    project = ProjectService.add_member_to_project(db, user_id, project_id)
+    return format_response(project, "Successfully added user to the project")
+
+
+@router.delete("/{project_id}/members/remove/{user_id}")
+def remove_member_from_project(
+    user_id: int, project_id: int, db: Session = Depends(get_db)
+):
+    project = ProjectService.remove_member_from_project(db, user_id, project_id)
+    return format_response(project, "Successfully removed user from the project")
+
+
+@router.get("/user/{user_id}")
+def get_projects_for_user(user_id: int, db: Session = Depends(get_db)):
+    projects = ProjectService.get_all_projects_for_user(db, user_id)
+    return format_response(
+        projects, f"Successfully fetched all projects for user {user_id}"
+    )

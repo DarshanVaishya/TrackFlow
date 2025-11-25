@@ -1,7 +1,32 @@
 from datetime import datetime, timezone
-from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Index, func
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    Table,
+    Text,
+    DateTime,
+    ForeignKey,
+    Index,
+    func,
+)
 from sqlalchemy.orm import relationship
 from app.database import Base
+
+
+project_members = Table(
+    "project_members",
+    Base.metadata,
+    Column(
+        "project_id",
+        Integer,
+        ForeignKey("project.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column(
+        "user_id", Integer, ForeignKey("user.id", ondelete="CASCADE"), primary_key=True
+    ),
+)
 
 
 class Project(Base):
@@ -28,6 +53,12 @@ class Project(Base):
         back_populates="project",
         cascade="all, delete-orphan",
         passive_deletes=True,
+    )
+
+    members = relationship(
+        "User",
+        secondary=project_members,
+        back_populates="projects_member_of",
     )
 
     __table_args__ = (

@@ -24,7 +24,7 @@ export default function NewBugPage() {
 			description,
 			status,
 			priority,
-			created_by_id: user.user.id,
+			created_by_id: user.id,
 			project_id: project_id
 		}).then(() => {
 			navigate(`/projects/${project_id}/bugs`)
@@ -34,7 +34,7 @@ export default function NewBugPage() {
 	return (
 		<Container>
 			<Navbar>
-				<BlackButton onClick={() => navigate("/bugs")}>← Back to Bugs</BlackButton>
+				<BlackButton onClick={() => navigate(`/projects/${project_id}/bugs`)}>← Back to Bugs</BlackButton>
 			</Navbar>
 			<div className="h-screen flex justify-center items-center" onSubmit={handleSubmit}>
 				<form className="p-5 border border-neutral-500/50 rounded min-w-xl">

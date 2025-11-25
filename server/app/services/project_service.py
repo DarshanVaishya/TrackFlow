@@ -2,10 +2,12 @@ from fastapi import HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
 from app.models.project import Project
 from app.database import get_db
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.schemas.project import CreateProjectPayload, UpdateProjectPayload
 from app.utils.logger import logger
+from app.models import User
+from app.services.user_service import UserService
 
 
 class ProjectService:
@@ -14,6 +16,16 @@ class ProjectService:
         try:
             project = Project(**project_data.model_dump())
             logger.debug(f"Creating a new project: {project.title}")
+
+            user = db.query(User).filter(User.id == project.created_by_id).first()
+            if not user:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"User with id {project.created_by_id} not found.",
+                )
+
+            project.members.append(user)
+
             db.add(project)
             db.commit()
             db.refresh(project)
@@ -45,6 +57,7 @@ class ProjectService:
                 f"Successfully retreived project - ID: {project_id}, title: {project.title}"
             )
             _ = project.bugs
+            _ = project.members
             return project
         except HTTPException:
             raise
@@ -63,6 +76,11 @@ class ProjectService:
             logger.debug(f"Fetching all the projects from the database")
             projects = db.query(Project).all()
             logger.info(f"Successfully fetched {len(projects)} projects.")
+
+            for project in projects:
+                _ = project.bugs
+                _ = project.members
+
             return projects
         except SQLAlchemyError as e:
             logger.error(f"Database error while fetching all projects: {str(e)}")
@@ -120,3 +138,48 @@ class ProjectService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Database error: {str(e)}",
             )
+
+    @staticmethod
+    def add_member_to_project(db: Session, user_id: int, project_id: int):
+        project = ProjectService.get_project_by_id(db, project_id)
+        user = UserService.get_user_by_id(db, user_id)
+
+        if user not in project.members:
+            project.members.append(user)
+            db.commit()
+            db.refresh(project)
+
+        _ = project.members
+        _ = project.bugs
+
+        return project
+
+    @staticmethod
+    def remove_member_from_project(db: Session, user_id: int, project_id: int):
+        project = ProjectService.get_project_by_id(db, project_id)
+        user = UserService.get_user_by_id(db, user_id)
+
+        if user in project.members:
+            project.members.remove(user)
+            db.commit()
+            db.refresh(project)
+
+        _ = project.members
+        _ = project.bugs
+
+        return project
+
+    @staticmethod
+    def get_all_projects_for_user(db: Session, user_id: int):
+        user = UserService.get_user_by_id(db, user_id)
+        projects = (
+            db.query(Project)
+            .join(Project.members)
+            .filter(User.id == user_id)
+            .options(
+                joinedload(Project.bugs),  # eager load bugs for each project
+                joinedload(Project.members),  # eager load members for each project
+            )
+            .all()
+        )
+        return projects

@@ -20,7 +20,8 @@ export default function App() {
 		const token = localStorage.getItem("accessToken");
 		if (token) {
 			try {
-				const user = jwtDecode(token);
+				const data = jwtDecode(token);
+				const user = data.user
 				setUser(user);
 			} catch (e) {
 				console.error("Failed to decode token:", e);

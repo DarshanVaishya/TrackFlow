@@ -2,21 +2,23 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { BlackButton, BlueButton } from "../components/utils/Buttons";
 import Container from "../components/utils/Container";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Spinner from "../components/utils/Spinner";
 import ProjectCard from "../components/ProjectCard";
+import { AuthContext } from "../contexts/AuthContext";
 
 export default function ProjectsPage() {
 	const navigate = useNavigate()
 	const [projects, setProjects] = useState(null)
+	const { user } = useContext(AuthContext)
 
 	useEffect(() => {
-		axios.get("http://localhost:8000/projects").then(response => {
+		axios.get(`http://localhost:8000/projects/user/${user.id}`).then(response => {
 			const projects = response.data.data
 			setProjects(projects)
 		})
-	}, [])
+	}, [user])
 
 	return (
 		<Container>

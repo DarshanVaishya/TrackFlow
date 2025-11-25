@@ -19,7 +19,7 @@ export default function NewProjectPage() {
 		axios.post("http://localhost:8000/projects", {
 			title,
 			description,
-			created_by_id: user.user.id,
+			created_by_id: user.id,
 		}).then(() => {
 			navigate(`/projects`)
 		})

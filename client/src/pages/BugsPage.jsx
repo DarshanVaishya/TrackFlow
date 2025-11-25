@@ -45,7 +45,6 @@ export default function BugsPage() {
 		);
 
 		if (status != "all") {
-			console.log(status)
 			filtered = filtered.filter(bug => bug.status === status)
 		}
 

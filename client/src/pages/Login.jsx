@@ -34,8 +34,10 @@ export default function LoginPage() {
 			localStorage.setItem("accessToken", token)
 			axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-			const { user } = jwtDecode(token)
+			const userData = jwtDecode(token)
+			const user = userData.user
 			setUser(user)
+			navigate("/projects")
 		} catch (e) {
 			const response = e.response.data
 			setError(response.message)
