@@ -1,10 +1,10 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { BlackButton, BlueButton } from "../components/utils/Buttons";
 import Container from "../components/utils/Container";
 import TextInput from "../components/utils/TextInput";
 import SelectInput from "../components/utils/SelectInput";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
 
@@ -12,14 +12,12 @@ export default function NewProjectPage() {
 	const navigate = useNavigate()
 	const [title, setTitle] = useState("")
 	const [description, setDescription] = useState("")
-	const { user } = useContext(AuthContext)
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
 		axios.post("http://localhost:8000/projects", {
 			title,
 			description,
-			created_by_id: user.id,
 		}).then(() => {
 			navigate(`/projects`)
 		})

@@ -5,14 +5,13 @@ import CommentCard from "./CommentCard"
 import axios from "axios"
 import { AuthContext } from "../contexts/AuthContext"
 
-export default function CommentsSection({ bugId, comments, setComments }) {
+export default function CommentsSection({ bugId, comments, setComments, project_id }) {
 	const [content, setContent] = useState("")
 	const { user } = useContext(AuthContext)
 
 	const handleSubmit = () => {
 		axios.post(`http://localhost:8000/comments`, {
 			"content": content,
-			"created_by_id": user.id,
 			"bug_id": bugId
 		}).then(data => {
 			const newComment = data.data.data
@@ -42,7 +41,7 @@ export default function CommentsSection({ bugId, comments, setComments }) {
 
 			{/* Comments */}
 			<div>
-				{comments.map(comment => <CommentCard key={comment.id} comment={comment} userId={user.id} commentsState={{ comments, setComments }} />)}
+				{comments.map(comment => <CommentCard key={comment.id} project_id={project_id} comment={comment} userId={user.id} commentsState={{ comments, setComments }} />)}
 			</div>
 
 			<div className="pt-10" />

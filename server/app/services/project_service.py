@@ -1,30 +1,26 @@
-from fastapi import HTTPException, status
-from sqlalchemy.exc import SQLAlchemyError
-from app.models.project import Project
+from starlette.status import HTTP_401_UNAUTHORIZED
 from app.database import get_db
-from sqlalchemy.orm import Session, joinedload
-
-from app.schemas.project import CreateProjectPayload, UpdateProjectPayload
-from app.utils.logger import logger
 from app.models import User
+from app.models.project import Project
+from app.schemas.project import CreateProjectPayload, UpdateProjectPayload
 from app.services.user_service import UserService
+from app.utils.auth import oauth2_scheme
+from app.utils.logger import logger
+from fastapi import Depends, HTTPException, status
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import Session, joinedload
 
 
 class ProjectService:
     @staticmethod
-    def create_project(db: Session, project_data: CreateProjectPayload):
+    def create_project(
+        db: Session, project_data: CreateProjectPayload, current_user: User
+    ):
         try:
             project = Project(**project_data.model_dump())
+            project.created_by_id = current_user.id
             logger.debug(f"Creating a new project: {project.title}")
-
-            user = db.query(User).filter(User.id == project.created_by_id).first()
-            if not user:
-                raise HTTPException(
-                    status_code=status.HTTP_404_NOT_FOUND,
-                    detail=f"User with id {project.created_by_id} not found.",
-                )
-
-            project.members.append(user)
+            project.members.append(current_user)
 
             db.add(project)
             db.commit()
@@ -121,9 +117,15 @@ class ProjectService:
             )
 
     @staticmethod
-    def delete_project(db: Session, project_id: int):
+    def delete_project(db: Session, project_id: int, current_user: User):
         logger.debug(f"Attempting to delete project - ID: {project_id}")
         project = ProjectService.get_project_by_id(db, project_id)
+
+        if current_user.id != project.created_by_id:
+            raise HTTPException(
+                status_code=HTTP_401_UNAUTHORIZED,
+                detail="Unauthorized access. Only project owner can delelte it.",
+            )
         try:
             db.delete(project)
             db.commit()
@@ -180,20 +182,20 @@ class ProjectService:
         return project
 
     @staticmethod
-    def get_all_projects_for_user(db: Session, user_id: int):
-        logger.debug(f"Attempting to fetch all projects for user {user_id}")
-        user = UserService.get_user_by_id(db, user_id)
+    def get_all_projects_for_user(db: Session, current_user: User):
+        logger.debug(f"Attempting to fetch all projects for user {current_user.id}")
+        user = UserService.get_user_by_id(db, current_user.id)
         projects = (
             db.query(Project)
             .join(Project.members)
-            .filter(User.id == user_id)
+            .filter(User.id == current_user.id)
             .options(
                 joinedload(Project.bugs),
                 joinedload(Project.members),
             )
             .all()
         )
-        logger.info(f"Fetched {len(projects)} projects for user {user_id}")
+        logger.info(f"Fetched {len(projects)} projects for user {current_user.id}")
         return projects
 
     @staticmethod

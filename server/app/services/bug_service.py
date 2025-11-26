@@ -1,6 +1,7 @@
 from fastapi import HTTPException, status
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
+from starlette.status import HTTP_401_UNAUTHORIZED
 
 from app.models import Bug, Project, User
 from app.schemas import CreateBugPayload, UpdateBugPayload
@@ -54,20 +55,16 @@ class BugService:
             )
 
     @staticmethod
-    def create_bug(db: Session, bug_data: CreateBugPayload) -> Bug:
+    def create_bug(db: Session, bug_data: CreateBugPayload, current_user: User) -> Bug:
         try:
             new_bug = Bug(**bug_data.model_dump())
+            new_bug.created_by_id = current_user.id
             logger.debug(f"Creating a new bug: {new_bug.title}")
-            user = db.query(User).filter(User.id == new_bug.created_by_id).first()
-            if not user:
-                raise HTTPException(
-                    status_code=404,
-                    detail=f"User with id {new_bug.created_by_id} does not exist.",
-                )
 
             db.add(new_bug)
             db.commit()
             db.refresh(new_bug)
+
             logger.info(
                 "Successfully created new bug: "
                 f"ID: {new_bug.id}, "
@@ -115,9 +112,15 @@ class BugService:
             )
 
     @staticmethod
-    def delete_bug(db: Session, bug_id: int) -> Bug:
+    def delete_bug(db: Session, bug_id: int, current_user: User) -> Bug:
         logger.debug(f"Attempting to delete bug - ID: {bug_id}")
         bug = BugService.get_bug_by_id(db, bug_id)
+
+        if current_user.id != bug.created_by_id:
+            raise HTTPException(
+                status_code=HTTP_401_UNAUTHORIZED,
+                detail="Unauthorized access. Only bug creator can delete it.",
+            )
 
         try:
             db.delete(bug)

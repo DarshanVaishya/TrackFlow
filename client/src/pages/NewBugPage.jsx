@@ -4,7 +4,7 @@ import { BlackButton, BlueButton } from "../components/utils/Buttons";
 import Container from "../components/utils/Container";
 import TextInput from "../components/utils/TextInput";
 import SelectInput from "../components/utils/SelectInput";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
 
@@ -14,7 +14,6 @@ export default function NewBugPage() {
 	const [description, setDescription] = useState("")
 	const [status, setStatus] = useState("todo")
 	const [priority, setPriority] = useState("low")
-	const { user } = useContext(AuthContext)
 	const { project_id } = useParams()
 
 	const handleSubmit = (e) => {
@@ -24,7 +23,6 @@ export default function NewBugPage() {
 			description,
 			status,
 			priority,
-			created_by_id: user.id,
 			project_id: project_id
 		}).then(() => {
 			navigate(`/projects/${project_id}/bugs`)

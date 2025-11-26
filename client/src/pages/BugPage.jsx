@@ -12,6 +12,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import Spinner from "../components/utils/Spinner";
 import { UserPen, ClockPlus, CalendarClock, UserPlus } from "lucide-react"
 import NameCard from "../components/utils/NameCard";
+import TextWithBugLinks from "../components/utils/TextWithBugLinks";
 
 export default function BugPage() {
 	const navigate = useNavigate()
@@ -115,7 +116,9 @@ export default function BugPage() {
 
 						<div className="border mt-5 border-neutral-500/50 rounded p-5">
 							<h1 className="font-bold">Description</h1>
-							<p className="whitespace-pre-line mt-5 mb-10 text-neutral-400">{bug.description}</p>
+							<p className="whitespace-pre-line mt-5 mb-10 text-neutral-400">
+								<TextWithBugLinks text={bug.description} projectId={project_id} />
+							</p>
 							<hr className="my-4 border-neutral-700" />
 							<div>
 								<p>Assigned To</p>
@@ -137,7 +140,7 @@ export default function BugPage() {
 							</div>
 						</div>
 
-						<CommentsSection setComments={setComments} bugId={bug_id} comments={comments} />
+						<CommentsSection project_id={project_id} setComments={setComments} bugId={bug_id} comments={comments} />
 					</>}
 			</div>
 

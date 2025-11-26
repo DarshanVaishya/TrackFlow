@@ -10,8 +10,6 @@ from app.config import get_settings
 
 settings = get_settings()
 
-# TODO: Add the get_current_user method
-# TODO: Change all the routes to use the protected method
 SECRET_KEY = settings.secret_key
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_DAYS = 3
@@ -41,15 +39,14 @@ def get_current_user(
 
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: str = payload.get("user_id")
-
-        if user_id is None:
+        print(payload)
+        user_data = payload.get("user")
+        if not user_data or "id" not in user_data:
             raise credentials_exception
-
+        user_id = user_data["id"]
     except JWTError:
         raise credentials_exception
 
-    # fetch user
     user = db.query(User).filter(User.id == int(user_id)).first()
 
     if user is None:

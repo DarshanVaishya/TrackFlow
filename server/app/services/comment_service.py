@@ -1,4 +1,4 @@
-from app.models import Comment
+from app.models import Comment, User
 from app.schemas.comment import CreateCommentPayload, UpdateCommentPayload
 from app.services.bug_service import BugService
 from app.services.user_service import UserService
@@ -9,13 +9,6 @@ from sqlalchemy.orm import Session, joinedload
 
 
 class CommentService:
-    @staticmethod
-    def verify_ids(db: Session, user_id: int = -1, bug_id: int = -1):
-        if bug_id != -1:
-            bug = BugService.get_bug_by_id(db, bug_id)
-        if user_id != -1:
-            user = UserService.get_user_by_id(db, user_id)
-
     @staticmethod
     def get_comment_by_id(db: Session, comment_id: int):
         logger.debug(f"Fetching comment by ID: {comment_id}")
@@ -60,14 +53,14 @@ class CommentService:
             )
 
     @staticmethod
-    def create_comment(db: Session, comment_data: CreateCommentPayload):
+    def create_comment(
+        db: Session, comment_data: CreateCommentPayload, current_user: User
+    ):
         try:
-            new_comment = Comment(**comment_data.model_dump())
             logger.debug(f"Creating a new comment: {comment_data.content}")
-
-            CommentService.verify_ids(
-                db, comment_data.created_by_id, comment_data.bug_id
-            )
+            new_comment = Comment(**comment_data.model_dump())
+            new_comment.created_by_id = current_user.id
+            bug = BugService.get_bug_by_id(db, comment_data.bug_id)
 
             db.add(new_comment)
             db.commit()
@@ -128,9 +121,14 @@ class CommentService:
             )
 
     @staticmethod
-    def delete_comment(db: Session, comment_id: int):
+    def delete_comment(db: Session, comment_id: int, current_user: User):
         logger.debug(f"Attempting to comment - ID: {comment_id}")
         comment = CommentService.get_comment_by_id(db, comment_id)
+        if current_user.id != comment.created_by_id:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Unauthorized access. Only comment author can delete the comment.",
+            )
 
         try:
             db.delete(comment)

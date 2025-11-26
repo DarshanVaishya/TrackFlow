@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.utils.formatter import format_response
 from app.models import User
-from app.utils.auth import create_access_token, get_current_user
+from app.utils.auth import create_access_token
 from app.utils.password import verify_password
 
 
@@ -39,8 +39,3 @@ def login_user(login: LoginRequest, db: Session = Depends(get_db)):
     token = create_access_token({"user": {"email": user.email, "id": user.id}})
 
     return TokenResponse(access_token=token)
-
-
-@router.get("/me")
-def get_me(current_user=Depends(get_current_user)):
-    return current_user

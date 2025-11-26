@@ -12,6 +12,7 @@ import { AuthContext } from './contexts/AuthContext.jsx';
 import ProjectsPage from './pages/ProjectsPage.jsx';
 import NewProjectPage from './pages/NewProjectPage.jsx';
 import EditProjectPage from './pages/EditProjectPage.jsx';
+import axios from 'axios';
 
 export default function App() {
 	const { setUser, setLoading } = useContext(AuthContext)
@@ -23,6 +24,8 @@ export default function App() {
 				const data = jwtDecode(token);
 				const user = data.user
 				setUser(user);
+				console.log("DEFAULT SET")
+				axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 			} catch (e) {
 				console.error("Failed to decode token:", e);
 				setUser(null);

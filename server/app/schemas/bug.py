@@ -12,7 +12,6 @@ class CreateBugPayload(BaseModel):
     description: str = Field(..., min_length=1)
     status: BugStatus
     priority: PriorityStates
-    created_by_id: int
     project_id: int
 
 

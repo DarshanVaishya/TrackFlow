@@ -5,7 +5,6 @@ from pydantic import BaseModel, Field
 class CreateProjectPayload(BaseModel):
     title: str = Field(..., min_length=1, max_length=255)
     description: str = Field(..., min_length=1)
-    created_by_id: int
 
 
 class UpdateProjectPayload(BaseModel):
