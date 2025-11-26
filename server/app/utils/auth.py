@@ -6,11 +6,13 @@ from sqlalchemy.orm import Session
 from app.models import User
 
 from app.database import get_db
+from app.config import get_settings
 
-# TODO: Move the secret key to .env
+settings = get_settings()
+
 # TODO: Add the get_current_user method
 # TODO: Change all the routes to use the protected method
-SECRET_KEY = "YOUR_SECRET_KEY"
+SECRET_KEY = settings.secret_key
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_DAYS = 3
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")

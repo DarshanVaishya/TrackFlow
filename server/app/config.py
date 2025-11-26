@@ -6,8 +6,8 @@ class Settings(BaseSettings):
     app_name: str = "Bug Tracker API"
     app_description: str = "A bug tracking API made with FastAPI"
 
-    # Pydantic will map DB_URL → database_url automatically
     database_url: str
+    secret_key: str
 
     model_config = SettingsConfigDict(env_file=".env")
 
