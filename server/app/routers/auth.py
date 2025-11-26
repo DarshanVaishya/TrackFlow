@@ -24,7 +24,7 @@ class TokenResponse(BaseModel):
 
 @router.post("/login", response_model=TokenResponse)
 def login_user(login: LoginRequest, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.email == login.email).first()
+    user = db.query(User).filter(User.email == login.email.lower()).first()
 
     if not user:
         raise HTTPException(

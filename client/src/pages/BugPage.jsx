@@ -98,7 +98,7 @@ export default function BugPage() {
 										<UserPlus className="h-4 w-4" />
 										Assign Users
 									</BlackButton>}
-									{canEdit && <BlueButton className="shrink-0 mb-5" onClick={() => navigate(`/projects/${project_id}/bugs/${bug.id}/edit`)}>Edit Bug</BlueButton>}
+									{(isOwner || canEdit) && <BlueButton className="shrink-0 mb-5" onClick={() => navigate(`/projects/${project_id}/bugs/${bug.id}/edit`)}>Edit Bug</BlueButton>}
 									{isOwner && <RedButton className="shrink-0" onClick={handleDelete}>Delete Bug</RedButton>}
 								</div>
 								<div className="flex flex-col justify-between sm:flex-row">

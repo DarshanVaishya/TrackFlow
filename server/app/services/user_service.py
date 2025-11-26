@@ -7,14 +7,6 @@ from app.utils.password import hash_password
 from app.models import User
 from app.utils.logger import logger
 
-# For authentication
-# def get_user_with_password(session: Session, email: str):
-#     # Explicitly load the password column using undefer option
-#     from sqlalchemy.orm import undefer
-#
-#     user = session.query(User).options(undefer(User.password)).filter(User.email == email).first()
-#     return user
-
 
 class UserService:
     @staticmethod
@@ -26,6 +18,7 @@ class UserService:
             user_dict["password"] = hash_password(user_dict["password"])
 
             new_user = User(**user_dict)
+            new_user.email = new_user.email.lower()
             db.add(new_user)
             db.commit()
             db.refresh(new_user)
