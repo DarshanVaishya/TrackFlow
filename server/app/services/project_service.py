@@ -141,6 +141,7 @@ class ProjectService:
 
     @staticmethod
     def add_member_to_project(db: Session, user_id: int, project_id: int):
+        logger.debug(f"Attempting to add user {user_id} to project {project_id}")
         project = ProjectService.get_project_by_id(db, project_id)
         user = UserService.get_user_by_id(db, user_id)
 
@@ -148,6 +149,9 @@ class ProjectService:
             project.members.append(user)
             db.commit()
             db.refresh(project)
+            logger.info(f"Successfully added user {user_id} to project {project_id}")
+        else:
+            logger.warning(f"User {user_id} already assigned to project {project_id}")
 
         _ = project.members
         _ = project.bugs
@@ -156,6 +160,7 @@ class ProjectService:
 
     @staticmethod
     def remove_member_from_project(db: Session, user_id: int, project_id: int):
+        logger.debug(f"Attempting to unassign user {user_id} from project {project_id}")
         project = ProjectService.get_project_by_id(db, project_id)
         user = UserService.get_user_by_id(db, user_id)
 
@@ -163,6 +168,11 @@ class ProjectService:
             project.members.remove(user)
             db.commit()
             db.refresh(project)
+            logger.info(
+                f"Successfully unassigned user {user_id} from project {project_id}"
+            )
+        else:
+            logger.warning(f"User {user_id} is not assigned to project {project_id}")
 
         _ = project.members
         _ = project.bugs
@@ -171,6 +181,7 @@ class ProjectService:
 
     @staticmethod
     def get_all_projects_for_user(db: Session, user_id: int):
+        logger.debug(f"Attempting to fetch all projects for user {user_id}")
         user = UserService.get_user_by_id(db, user_id)
         projects = (
             db.query(Project)
@@ -182,10 +193,13 @@ class ProjectService:
             )
             .all()
         )
+        logger.info(f"Fetched {len(projects)} projects for user {user_id}")
         return projects
 
     @staticmethod
     def get_all_users_for_project(db: Session, project_id: int):
+        logger.debug(f"Attempting to fetch all users for project {project_id}")
         project = ProjectService.get_project_by_id(db, project_id)
         users = project.members
+        logger.info(f"Fetched {len(users)} users from project {project_id}")
         return users

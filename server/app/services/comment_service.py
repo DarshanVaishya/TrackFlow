@@ -44,7 +44,6 @@ class CommentService:
         try:
             logger.debug(f"Fetching all comments from bug with id {bug_id}.")
             bug = BugService.get_bug_by_id(db, bug_id)
-            # comments = bug.comments
             comments = (
                 db.query(Comment)
                 .options(joinedload(Comment.created_by))
@@ -74,7 +73,6 @@ class CommentService:
             db.commit()
             db.refresh(new_comment)
 
-            # Only to load the data
             _ = new_comment.created_by
 
             logger.info(

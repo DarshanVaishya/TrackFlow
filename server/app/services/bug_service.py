@@ -92,7 +92,6 @@ class BugService:
         try:
             update_dict = update_data.model_dump(exclude_unset=True)
 
-            # TODO: Create a util function to log all fields to be updated
             fields_to_update = [k for k in update_dict.keys()]
             if fields_to_update:
                 logger.debug(
@@ -115,7 +114,6 @@ class BugService:
                 detail=f"Database error: {str(e)}",
             )
 
-    # TODO: Make sure created_bu_id and request user id are the same before deleting
     @staticmethod
     def delete_bug(db: Session, bug_id: int) -> Bug:
         logger.debug(f"Attempting to delete bug - ID: {bug_id}")
@@ -138,10 +136,12 @@ class BugService:
 
     @staticmethod
     def assign_user_to_bug(bug_id: int, user_id: int, db: Session):
+        logger.debug(f"Attempting to assign user {user_id} to bug {bug_id}")
         bug = BugService.get_bug_by_id(db, bug_id)
         user = UserService.get_user_by_id(db, user_id)
 
         bug.assignees.append(user)
+        logger.info(f"Successfully assigned user {user_id} to bug {bug_id}")
         db.commit()
         db.refresh(bug)
         _ = bug.assignees
@@ -149,10 +149,12 @@ class BugService:
 
     @staticmethod
     def unassign_user_to_bug(bug_id: int, user_id: int, db: Session):
+        logger.debug(f"Attempting to unassign user {user_id} from bug {bug_id}")
         bug = BugService.get_bug_by_id(db, bug_id)
         user = UserService.get_user_by_id(db, user_id)
 
         bug.assignees.remove(user)
+        logger.debug(f"Successfully unassigned user {user_id} from bug {bug_id}")
         db.commit()
         db.refresh(bug)
         _ = bug.assignees
