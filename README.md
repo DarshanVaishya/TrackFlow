@@ -4,7 +4,7 @@
 
 - [Overview](#overview)
   - [Technologies used](#technologies-used)
-- [Intallation](#installation)
+- [Installation](#installation)
 - [Screenshots](#screenshots)
 - [Collaboration](#collaboration)
 
@@ -19,7 +19,7 @@ TrackFlow is a bug tracking app created using FastAPI + React. It is an open-sou
 - Tailwind
 
 
-## Intallation
+## Installation
 You will need two terminals for this
 Terminal 1
 ```
