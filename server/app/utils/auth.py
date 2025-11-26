@@ -39,7 +39,6 @@ def get_current_user(
 
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        print(payload)
         user_data = payload.get("user")
         if not user_data or "id" not in user_data:
             raise credentials_exception

@@ -105,9 +105,17 @@ class UserService:
             )
 
     @staticmethod
-    def update_user(db: Session, user_id: int, update_data: UpdateUserPayload) -> User:
+    def update_user(
+        db: Session, user_id: int, update_data: UpdateUserPayload, current_user: User
+    ) -> User:
         logger.debug(f"Updating user - ID: {user_id}")
         user = UserService.get_user_by_id(db, user_id)
+
+        if current_user.id != user.id:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Unauthorized access. You can not edit other users details.",
+            )
 
         try:
             update_dict = update_data.model_dump(exclude_unset=True)
@@ -155,9 +163,14 @@ class UserService:
             )
 
     @staticmethod
-    def delete_user(db: Session, user_id: int) -> User:
+    def delete_user(db: Session, user_id: int, current_user: User) -> User:
         logger.debug(f"Attempting to delete user - ID: {user_id}")
         user = UserService.get_user_by_id(db, user_id)
+        if current_user.id != user.id:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Unauthorized access. You can not delete other user.",
+            )
         try:
             user_email = user.email
             db.delete(user)

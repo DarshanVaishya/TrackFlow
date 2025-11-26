@@ -37,7 +37,9 @@ def update_coment(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    updated_comment = CommentService.update_comment(db, comment_id, comment_data)
+    updated_comment = CommentService.update_comment(
+        db, comment_id, comment_data, current_user
+    )
     return format_response(updated_comment, "Comment updated successfully")
 
 

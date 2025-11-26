@@ -51,7 +51,7 @@ def update_user(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    updated_user = UserService.update_user(db, user_id, user_data)
+    updated_user = UserService.update_user(db, user_id, user_data, current_user)
     return format_response(updated_user, "User data has been updated")
 
 
@@ -63,5 +63,5 @@ def delete_user(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    deleted_user = UserService.delete_user(db, user_id)
+    deleted_user = UserService.delete_user(db, user_id, current_user)
     return format_response(deleted_user, "User has been deleted successfully.")

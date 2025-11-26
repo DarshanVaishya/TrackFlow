@@ -86,7 +86,10 @@ class CommentService:
 
     @staticmethod
     def update_comment(
-        db: Session, comment_id: int, comment_data: UpdateCommentPayload
+        db: Session,
+        comment_id: int,
+        comment_data: UpdateCommentPayload,
+        current_user: User,
     ):
         comment = CommentService.get_comment_by_id(db, comment_id)
         logger.debug(f"Updating comment ID - {comment_id}")

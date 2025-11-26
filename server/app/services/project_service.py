@@ -86,9 +86,20 @@ class ProjectService:
             )
 
     @staticmethod
-    def update_project(project_id: int, update_data: UpdateProjectPayload, db: Session):
+    def update_project(
+        project_id: int,
+        update_data: UpdateProjectPayload,
+        db: Session,
+        current_user: User,
+    ):
         logger.debug(f"Updating project - ID: {project_id}")
         project = ProjectService.get_project_by_id(db, project_id)
+
+        if current_user.id != project.created_by_id:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Unauthorized access. Only project creator can edit it.",
+            )
 
         try:
             update_dict = update_data.model_dump(exclude_unset=True)
@@ -124,7 +135,7 @@ class ProjectService:
         if current_user.id != project.created_by_id:
             raise HTTPException(
                 status_code=HTTP_401_UNAUTHORIZED,
-                detail="Unauthorized access. Only project owner can delelte it.",
+                detail="Unauthorized access. Only project creator can delete it.",
             )
         try:
             db.delete(project)

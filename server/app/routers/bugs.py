@@ -54,7 +54,7 @@ def update_bug(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    bug = BugService.update_bug(db, bug_id, update_data)
+    bug = BugService.update_bug(db, bug_id, update_data, current_user)
     return format_response(bug, f"Bug with id {bug_id} updated successfully")
 
 
@@ -75,7 +75,7 @@ def assign_user_to_bug(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    bug = BugService.assign_user_to_bug(bug_id, user_id, db)
+    bug = BugService.assign_user_to_bug(bug_id, user_id, db, current_user)
     return format_response(bug, f"Successfully assign user {user_id} to bug {bug_id}")
 
 
@@ -86,7 +86,7 @@ def unassign_user_to_bug(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    bug = BugService.unassign_user_to_bug(bug_id, user_id, db)
+    bug = BugService.unassign_user_to_bug(bug_id, user_id, db, current_user)
     return format_response(
         bug, f"Successfully unassigned user {user_id} from bug {bug_id}"
     )

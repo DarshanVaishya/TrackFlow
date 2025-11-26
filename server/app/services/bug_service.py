@@ -82,9 +82,17 @@ class BugService:
             )
 
     @staticmethod
-    def update_bug(db: Session, bug_id: int, update_data: UpdateBugPayload) -> Bug:
+    def update_bug(
+        db: Session, bug_id: int, update_data: UpdateBugPayload, current_user: User
+    ) -> Bug:
         bug = BugService.get_bug_by_id(db, bug_id)
         logger.debug(f"Updating bug - ID: {bug_id}")
+
+        if current_user.id != bug.created_by_id:
+            raise HTTPException(
+                status_code=HTTP_401_UNAUTHORIZED,
+                detail="Unauthorized access. Only bug creator can edit it.",
+            )
 
         try:
             update_dict = update_data.model_dump(exclude_unset=True)
@@ -138,10 +146,16 @@ class BugService:
             )
 
     @staticmethod
-    def assign_user_to_bug(bug_id: int, user_id: int, db: Session):
+    def assign_user_to_bug(bug_id: int, user_id: int, db: Session, current_user: User):
         logger.debug(f"Attempting to assign user {user_id} to bug {bug_id}")
         bug = BugService.get_bug_by_id(db, bug_id)
         user = UserService.get_user_by_id(db, user_id)
+
+        if current_user.id != bug.created_by_id:
+            raise HTTPException(
+                status_code=HTTP_401_UNAUTHORIZED,
+                detail="Unauthorized access. Only bug creator can assign members to it.",
+            )
 
         bug.assignees.append(user)
         logger.info(f"Successfully assigned user {user_id} to bug {bug_id}")
@@ -151,10 +165,18 @@ class BugService:
         return bug
 
     @staticmethod
-    def unassign_user_to_bug(bug_id: int, user_id: int, db: Session):
+    def unassign_user_to_bug(
+        bug_id: int, user_id: int, db: Session, current_user: User
+    ):
         logger.debug(f"Attempting to unassign user {user_id} from bug {bug_id}")
         bug = BugService.get_bug_by_id(db, bug_id)
         user = UserService.get_user_by_id(db, user_id)
+
+        if current_user.id != bug.created_by_id:
+            raise HTTPException(
+                status_code=HTTP_401_UNAUTHORIZED,
+                detail="Unauthorized access. Only bug creator can unassign members from it.",
+            )
 
         bug.assignees.remove(user)
         logger.debug(f"Successfully unassigned user {user_id} from bug {bug_id}")

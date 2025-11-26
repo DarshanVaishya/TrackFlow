@@ -25,10 +25,19 @@ export default function LoginPage() {
 	const handleLogin = async (e) => {
 		e.preventDefault()
 		try {
-			const data = await axios.post("http://localhost:8000/auth/login", {
-				email,
-				password
-			})
+			const params = new URLSearchParams();
+			params.append("username", email);
+			params.append("password", password);
+
+			const data = await axios.post(
+				"http://localhost:8000/auth/login",
+				params,
+				{
+					headers: {
+						"Content-Type": "application/x-www-form-urlencoded",
+					},
+				}
+			);
 			setError(null)
 			const token = data.data.access_token
 			localStorage.setItem("accessToken", token)
