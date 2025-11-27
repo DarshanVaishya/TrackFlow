@@ -158,18 +158,32 @@ class ProjectService:
         project = ProjectService.get_project_by_id(db, project_id)
         user = UserService.get_user_by_id(db, user_id)
 
-        if user not in project.members:
-            project.members.append(user)
-            db.commit()
-            db.refresh(project)
-            logger.info(f"Successfully added user {user_id} to project {project_id}")
-        else:
-            logger.warning(f"User {user_id} already assigned to project {project_id}")
+        try:
+            if user not in project.members:
+                project.members.append(user)
+                db.commit()
+                db.refresh(project)
+                logger.info(
+                    f"Successfully added user {user_id} to project {project_id}"
+                )
+            else:
+                logger.warning(
+                    f"User {user_id} already assigned to project {project_id}"
+                )
 
-        _ = project.members
-        _ = project.bugs
+            _ = project.members
+            _ = project.bugs
 
-        return project
+            return project
+        except SQLAlchemyError as e:
+            db.rollback()
+            logger.error(
+                f"Database error during adding user {user_id} to project {project_id}, Error: {str(e)}"
+            )
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Database error: {str(e)}",
+            )
 
     @staticmethod
     def remove_member_from_project(db: Session, user_id: int, project_id: int):
@@ -177,42 +191,71 @@ class ProjectService:
         project = ProjectService.get_project_by_id(db, project_id)
         user = UserService.get_user_by_id(db, user_id)
 
-        if user in project.members:
-            project.members.remove(user)
-            db.commit()
-            db.refresh(project)
-            logger.info(
-                f"Successfully unassigned user {user_id} from project {project_id}"
+        try:
+            if user in project.members:
+                project.members.remove(user)
+                db.commit()
+                db.refresh(project)
+                logger.info(
+                    f"Successfully unassigned user {user_id} from project {project_id}"
+                )
+            else:
+                logger.warning(
+                    f"User {user_id} is not assigned to project {project_id}"
+                )
+
+            _ = project.members
+            _ = project.bugs
+
+            return project
+        except SQLAlchemyError as e:
+            db.rollback()
+            logger.error(
+                f"Database error during removing user {user_id} from project {project_id}, Error: {str(e)}"
             )
-        else:
-            logger.warning(f"User {user_id} is not assigned to project {project_id}")
-
-        _ = project.members
-        _ = project.bugs
-
-        return project
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Database error: {str(e)}",
+            )
 
     @staticmethod
     def get_all_projects_for_user(db: Session, current_user: User):
         logger.debug(f"Attempting to fetch all projects for user {current_user.id}")
-        user = UserService.get_user_by_id(db, current_user.id)
-        projects = (
-            db.query(Project)
-            .join(Project.members)
-            .filter(User.id == current_user.id)
-            .options(
-                joinedload(Project.bugs),
-                joinedload(Project.members),
+        try:
+            projects = (
+                db.query(Project)
+                .join(Project.members)
+                .filter(User.id == current_user.id)
+                .options(
+                    joinedload(Project.bugs),
+                    joinedload(Project.members),
+                )
+                .all()
             )
-            .all()
-        )
-        logger.info(f"Fetched {len(projects)} projects for user {current_user.id}")
-        return projects
+            logger.info(f"Fetched {len(projects)} projects for user {current_user.id}")
+            return projects
+        except SQLAlchemyError as e:
+            logger.error(
+                f"Database error while fetching all projects for user {current_user.id}: {str(e)}"
+            )
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Database error: {str(e)}",
+            )
 
     @staticmethod
     def get_all_users_for_project(db: Session, project_id: int):
         logger.debug(f"Attempting to fetch all users for project {project_id}")
-        project = ProjectService.get_project_by_id(db, project_id)
-        users = project.members
-        logger.info(f"Fetched {len(users)} users from project {project_id}")
-        return users
+        try:
+            project = ProjectService.get_project_by_id(db, project_id)
+            users = project.members
+            logger.info(f"Fetched {len(users)} users from project {project_id}")
+            return users
+        except SQLAlchemyError as e:
+            logger.error(
+                f"Database error while fetching all users for project {project_id}: {str(e)}"
+            )
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Database error: {str(e)}",
+            )

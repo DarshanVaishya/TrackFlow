@@ -157,12 +157,22 @@ class BugService:
                 detail="Unauthorized access. Only bug creator can assign members to it.",
             )
 
-        bug.assignees.append(user)
-        logger.info(f"Successfully assigned user {user_id} to bug {bug_id}")
-        db.commit()
-        db.refresh(bug)
-        _ = bug.assignees
-        return bug
+        try:
+            bug.assignees.append(user)
+            logger.info(f"Successfully assigned user {user_id} to bug {bug_id}")
+            db.commit()
+            db.refresh(bug)
+            _ = bug.assignees
+            return bug
+        except SQLAlchemyError as e:
+            db.rollback()
+            logger.error(
+                f"Database error during assign user {user_id} to bug {bug_id}, Error: {str(e)}"
+            )
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Database error: {str(e)}",
+            )
 
     @staticmethod
     def unassign_user_to_bug(
@@ -178,9 +188,19 @@ class BugService:
                 detail="Unauthorized access. Only bug creator can unassign members from it.",
             )
 
-        bug.assignees.remove(user)
-        logger.debug(f"Successfully unassigned user {user_id} from bug {bug_id}")
-        db.commit()
-        db.refresh(bug)
-        _ = bug.assignees
-        return bug
+        try:
+            bug.assignees.remove(user)
+            logger.debug(f"Successfully unassigned user {user_id} from bug {bug_id}")
+            db.commit()
+            db.refresh(bug)
+            _ = bug.assignees
+            return bug
+        except SQLAlchemyError as e:
+            db.rollback()
+            logger.error(
+                f"Database error during unassign user {user_id} from bug {bug_id}, Error: {str(e)}"
+            )
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Database error: {str(e)}",
+            )
