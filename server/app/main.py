@@ -12,10 +12,6 @@ from app.utils.exceptions import http_exception_handler, validation_exception_ha
 from app.routers import auth
 from app.routers import project
 
-# Create database tables
-# Base.metadata.drop_all(bind=engine)
-# Base.metadata.create_all(bind=engine)
-
 settings = get_settings()
 
 app = FastAPI(
