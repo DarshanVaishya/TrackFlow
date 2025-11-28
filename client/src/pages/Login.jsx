@@ -78,7 +78,7 @@ export default function LoginPage() {
 			</Navbar>
 
 			<Container>
-				<div className="h-screen flex flex-col items-center justify-center text-center gap-5 px-36">
+				<div className="h-screen flex flex-col items-center justify-center text-center gap-5 sm:px-36">
 					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-18 h-18 text-blue-500 bg-blue-900/30 rounded-4xl p-4">
 						<rect x="3" y="11" width="18" height="11" rx="2" />
 						<path d="M7 11V7a5 5 0 0 1 10 0v4" />
@@ -88,7 +88,7 @@ export default function LoginPage() {
 					<p className="text-neutral-500 text-lg">{isLogin ? "Sign in to your TrackFlow Account" : "Sign up for a TrackFlow Account"}</p>
 
 					{/* Login box */}
-					<form className="border-neutral-500/30 bg-neutral-900/40 border p-8 flex flex-col gap-2 rounded-lg min-w-lg" onSubmit={isLogin ? handleLogin : handleSignUp}>
+					<form className="border-neutral-500/30 bg-neutral-900/40 border p-8 flex flex-col gap-2 rounded-lg sm:min-w-lg" onSubmit={isLogin ? handleLogin : handleSignUp}>
 						<h2 className="text-2xl">{isLogin ? "Login" : "Sign Up"}</h2>
 						{error ? <span className="text-red-400 bg-red-900/30 self-center py-2 px-4 rounded-4xl">{error}</span> : ""}
 						<TextInput label="Email" type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} />
