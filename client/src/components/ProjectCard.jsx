@@ -5,7 +5,7 @@ import { AuthContext } from "../contexts/AuthContext"
 import { Pencil, Trash2, Users, CircleCheckBig } from "lucide-react"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
-import API_BASE_URL from "../../api"
+import API_BASE_URL from "../api"
 
 export default function ProjectCard({ project, handleClick, setProjects, projects }) {
 	const { user } = useContext(AuthContext)

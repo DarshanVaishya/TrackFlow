@@ -6,7 +6,7 @@ import TextInput from "../components/utils/TextInput";
 import SelectInput from "../components/utils/SelectInput";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import API_BASE_URL from "../../api";
+import API_BASE_URL from "../api";
 
 export default function EditBugPage() {
 	const navigate = useNavigate()

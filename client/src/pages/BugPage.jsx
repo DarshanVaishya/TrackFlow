@@ -13,7 +13,7 @@ import Spinner from "../components/utils/Spinner";
 import { UserPen, ClockPlus, CalendarClock, UserPlus, History } from "lucide-react"
 import NameCard from "../components/utils/NameCard";
 import TextWithBugLinks from "../components/utils/TextWithBugLinks";
-import API_BASE_URL from "../../api";
+import API_BASE_URL from "../api";
 
 export default function BugPage() {
 	const navigate = useNavigate()

@@ -3,15 +3,13 @@ import { FormatDate } from "./BugsCard";
 import { useState } from "react";
 import { BlueButton } from "./utils/Buttons";
 import { Pencil, Trash2 } from "lucide-react"
-import { useNavigate } from "react-router-dom";
 import TextWithBugLinks from "./utils/TextWithBugLinks";
-import API_BASE_URL from "../../api";
+import API_BASE_URL from "../api";
 
 export default function CommentCard({ comment, userId, commentsState, project_id }) {
 	const { comments, setComments } = commentsState;
 	const [editing, setEditing] = useState(false)
 	const [content, setContent] = useState(comment.content)
-	const navigate = useNavigate()
 
 	const handleDelete = () => {
 		axios.delete(`${API_BASE_URL}/comments/${comment.id}`)

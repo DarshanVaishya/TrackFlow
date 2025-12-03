@@ -7,7 +7,7 @@ import axios from "axios";
 import BugsCard from "../components/BugsCard";
 import Spinner from "../components/utils/Spinner";
 import { Filter, Plus } from "lucide-react"
-import API_BASE_URL from "../../api";
+import API_BASE_URL from "../api";
 
 export default function BugsPage() {
 	const navigate = useNavigate()

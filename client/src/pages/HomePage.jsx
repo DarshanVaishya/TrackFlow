@@ -3,6 +3,7 @@ import { BlackButton, BlueButton } from "../components/utils/Buttons";
 import Container from "../components/utils/Container";
 import { CodeXml, Github, TextAlignStart, Lock, Server, Database, Zap, Shield } from "lucide-react"
 import FeatureCard from "../components/utils/FeatureCard";
+import { useNavigate } from "react-router-dom";
 
 const features = [
 	{
@@ -44,6 +45,7 @@ const features = [
 ]
 
 export default function HomePage() {
+	const navigate = useNavigate()
 	// TODO: Add rest of the sections
 	return (
 		<Container>
@@ -65,7 +67,7 @@ export default function HomePage() {
 				<div className="flex justify-center items-center gap-5 pt-5">
 					<BlueButton className="flex gap-3 items-center">
 						<TextAlignStart className="h-5 w-5" />
-						<a href="/login">Get Started</a>
+						<a onClick={() => navigate("/login")}>Get Started</a>
 					</BlueButton>
 					<BlackButton className="flex gap-3 items-center">
 						<Github className="h-5 w-5" />

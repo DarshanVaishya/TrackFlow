@@ -4,7 +4,7 @@ import { BlueButton } from "./utils/Buttons"
 import CommentCard from "./CommentCard"
 import axios from "axios"
 import { AuthContext } from "../contexts/AuthContext"
-import API_BASE_URL from "../../api"
+import API_BASE_URL from "../api"
 
 export default function CommentsSection({ bugId, comments, setComments, project_id }) {
 	const [content, setContent] = useState("")

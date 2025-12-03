@@ -8,7 +8,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import Spinner from "../components/utils/Spinner";
 import { Pencil, Trash2 } from "lucide-react"
-import API_BASE_URL from "../../api";
+import API_BASE_URL from "../api";
 
 export default function EditProjectPage() {
 	const navigate = useNavigate()

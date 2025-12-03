@@ -8,7 +8,7 @@ import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import API_BASE_URL from "../../api";
+import API_BASE_URL from "../api";
 
 export default function LoginPage() {
 	const [email, setEmail] = useState("")

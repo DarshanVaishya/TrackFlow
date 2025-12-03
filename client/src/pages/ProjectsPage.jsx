@@ -7,7 +7,7 @@ import axios from "axios";
 import Spinner from "../components/utils/Spinner";
 import ProjectCard from "../components/ProjectCard";
 import { AuthContext } from "../contexts/AuthContext";
-import API_BASE_URL from "../../api";
+import API_BASE_URL from "../api";
 
 export default function ProjectsPage() {
 	const navigate = useNavigate()

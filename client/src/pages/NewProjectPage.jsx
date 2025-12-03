@@ -7,7 +7,7 @@ import SelectInput from "../components/utils/SelectInput";
 import { useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
-import API_BASE_URL from "../../api";
+import API_BASE_URL from "../api";
 
 export default function NewProjectPage() {
 	const navigate = useNavigate()

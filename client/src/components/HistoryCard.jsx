@@ -1,12 +1,12 @@
 import { Plus, MoveRight, FileText, ChartPie, CircleCheckBig, UserPlus, UserMinus } from "lucide-react"
 import { FormatDate } from "./BugsCard"
-import { useContext, useMemo } from "react"
+import { useContext } from "react"
 import { AuthContext } from "../contexts/AuthContext"
 import Spinner from "./utils/Spinner"
 import axios from "axios"
 import { useEffect } from "react"
 import { useState } from "react"
-import API_BASE_URL from "../../api"
+import API_BASE_URL from "../api"
 
 const statusMapper = {
 	"todo": "Todo",
