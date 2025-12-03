@@ -3,10 +3,16 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from starlette.status import HTTP_401_UNAUTHORIZED
 
-from app.models import Bug, Project, User
+from app.models import Bug, Project, User, BugHistory
 from app.schemas import CreateBugPayload, UpdateBugPayload
 from app.utils.logger import logger
 from app.services.user_service import UserService
+
+
+def get_value_for_history(value):
+    if hasattr(value, "value"):
+        return value.value
+    return str(value)
 
 
 class BugService:
@@ -60,8 +66,19 @@ class BugService:
             new_bug = Bug(**bug_data.model_dump())
             new_bug.created_by_id = current_user.id
             logger.debug(f"Creating a new bug: {new_bug.title}")
-
             db.add(new_bug)
+            db.flush()
+
+            logger.info(f"Adding CREATE entry to bug {new_bug.id} history.")
+            history_entry = BugHistory(
+                bug_id=new_bug.id,
+                changed_by_id=current_user.id,
+                field_name="create",
+                old_value="",
+                new_value="",
+            )
+
+            db.add(history_entry)
             db.commit()
             db.refresh(new_bug)
 
@@ -103,7 +120,17 @@ class BugService:
                     f"Updating fields for bug {bug_id}: {', '.join(fields_to_update)}"
                 )
             for field, value in update_dict.items():
-                setattr(bug, field, value)
+                old = getattr(bug, field)
+                if old != value:
+                    history_entry = BugHistory(
+                        bug_id=bug.id,
+                        changed_by_id=current_user.id,
+                        field_name=field,
+                        old_value=get_value_for_history(old),
+                        new_value=get_value_for_history(value),
+                    )
+                    db.add(history_entry)
+                    setattr(bug, field, value)
 
             db.commit()
             db.refresh(bug)
@@ -120,7 +147,7 @@ class BugService:
             )
 
     @staticmethod
-    def delete_bug(db: Session, bug_id: int, current_user: User) -> Bug:
+    def delete_bug(db: Session, bug_id: int, current_user: User):
         logger.debug(f"Attempting to delete bug - ID: {bug_id}")
         bug = BugService.get_bug_by_id(db, bug_id)
 
@@ -132,9 +159,18 @@ class BugService:
 
         try:
             db.delete(bug)
+            history_entry = BugHistory(
+                bug_id=bug.id,
+                changed_by_id=current_user.id,
+                field_name="delete",
+                old_value=bug.title,
+                new_value="",
+            )
+            db.add(history_entry)
+
             db.commit()
             logger.info(f"Successfully deleted bug - ID: {bug_id}")
-            return bug
+            return {"message": "Bug deleted successfully", "bug_id": bug_id}
         except SQLAlchemyError as e:
             db.rollback()
             logger.error(
@@ -160,6 +196,14 @@ class BugService:
         try:
             bug.assignees.append(user)
             logger.info(f"Successfully assigned user {user_id} to bug {bug_id}")
+            history_entry = BugHistory(
+                bug_id=bug.id,
+                changed_by_id=current_user.id,
+                field_name="assign",
+                old_value="",
+                new_value=get_value_for_history(user_id),
+            )
+            db.add(history_entry)
             db.commit()
             db.refresh(bug)
             _ = bug.assignees
@@ -191,6 +235,14 @@ class BugService:
         try:
             bug.assignees.remove(user)
             logger.debug(f"Successfully unassigned user {user_id} from bug {bug_id}")
+            history_entry = BugHistory(
+                bug_id=bug.id,
+                changed_by_id=current_user.id,
+                field_name="unassign",
+                old_value="",
+                new_value=get_value_for_history(user_id),
+            )
+            db.add(history_entry)
             db.commit()
             db.refresh(bug)
             _ = bug.assignees
@@ -204,3 +256,8 @@ class BugService:
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Database error: {str(e)}",
             )
+
+    @staticmethod
+    def bug_history(bug_id: int, current_user: User, db: Session):
+        history = db.query(BugHistory).filter(BugHistory.bug_id == bug_id).all()
+        return history

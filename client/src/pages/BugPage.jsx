@@ -10,7 +10,7 @@ import { FormatDate } from "../components/BugsCard";
 import CommentsSection from "../components/CommentsSection";
 import { AuthContext } from "../contexts/AuthContext";
 import Spinner from "../components/utils/Spinner";
-import { UserPen, ClockPlus, CalendarClock, UserPlus } from "lucide-react"
+import { UserPen, ClockPlus, CalendarClock, UserPlus, History } from "lucide-react"
 import NameCard from "../components/utils/NameCard";
 import TextWithBugLinks from "../components/utils/TextWithBugLinks";
 
@@ -101,6 +101,10 @@ export default function BugPage() {
 									</BlackButton>}
 									{(isOwner || canEdit) && <BlueButton className="shrink-0 mb-5" onClick={() => navigate(`/projects/${project_id}/bugs/${bug.id}/edit`)}>Edit Bug</BlueButton>}
 									{isOwner && <RedButton className="shrink-0" onClick={handleDelete}>Delete Bug</RedButton>}
+									<BlackButton className="flex gap-1 shrink-0 items-center" onClick={() => navigate(`/projects/${project_id}/bugs/${bug.id}/history`)}>
+										<History className="h-5 w-5" />
+										History
+									</BlackButton>
 								</div>
 								<div className="flex flex-col justify-between sm:flex-row">
 									<h1 className="text-3xl">{bug.title}</h1>
@@ -157,6 +161,7 @@ export default function BugPage() {
 									const isChecked = bug.assignees.some(m => m.id === user.id);
 
 									const handleCheckboxChange = async (event) => {
+										{/* console.log("ASSIGN/UNASSIGN ", user) */ }
 										try {
 											let response;
 											if (event.target.checked) {
