@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import Priority from "./utils/Priority"
 import Spinner from "./utils/Spinner"
-import Status from "./utils/status"
+import Status from "./utils/Status"
 
 export function FormatDate(isoDate, Time = false) {
 	const dateObj = new Date(isoDate);
