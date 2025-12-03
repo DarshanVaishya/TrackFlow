@@ -4,7 +4,7 @@ import { BlackButton, BlueButton, RedButton } from "../components/utils/Buttons"
 import Container from "../components/utils/Container";
 import { useContext, useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import Status from "../components/utils/status";
+import Status from "../components/utils/Status";
 import Priority from "../components/utils/Priority";
 import { FormatDate } from "../components/BugsCard";
 import CommentsSection from "../components/CommentsSection";
