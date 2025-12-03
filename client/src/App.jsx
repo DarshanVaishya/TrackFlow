@@ -13,6 +13,7 @@ import ProjectsPage from './pages/ProjectsPage.jsx';
 import NewProjectPage from './pages/NewProjectPage.jsx';
 import EditProjectPage from './pages/EditProjectPage.jsx';
 import axios from 'axios';
+import BugHistory from './pages/BugHistory.jsx';
 
 export default function App() {
 	const { setUser, setLoading } = useContext(AuthContext)
@@ -22,17 +23,26 @@ export default function App() {
 		if (token) {
 			try {
 				const data = jwtDecode(token);
-				const user = data.user
-				setUser(user);
-				console.log("DEFAULT SET")
-				axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+				const currentTime = Date.now() / 1000;
+				if (data.exp && data.exp < currentTime) {
+					localStorage.removeItem("accessToken");
+					setUser(null);
+					axios.defaults.headers.common['Authorization'] = undefined;
+				} else {
+					const user = data.user;
+					setUser(user);
+					axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+				}
 			} catch (e) {
 				console.error("Failed to decode token:", e);
+				localStorage.removeItem("accessToken");
 				setUser(null);
+				axios.defaults.headers.common['Authorization'] = undefined;
 			}
 		}
-		setLoading(false)
+		setLoading(false);
 	}, [setUser, setLoading]);
+
 
 	return (
 		<Routes>
@@ -48,6 +58,7 @@ export default function App() {
 				<Route path='/projects/:project_id/bugs/:bug_id' element={<BugPage />} />
 				<Route path='/projects/:project_id/bugs/new' element={<NewBugPage />} />
 				<Route path='/projects/:project_id/bugs/:bug_id/edit' element={<EditBugPage />} />
+				<Route path='/projects/:project_id/bugs/:bug_id/history' element={<BugHistory />} />
 			</Route>
 		</Routes>
 	);

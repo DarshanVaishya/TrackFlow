@@ -64,8 +64,8 @@ def delete_bug(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    bug = BugService.delete_bug(db, bug_id, current_user)
-    return format_response(bug, f"Bug with id {bug_id} deleted successfully")
+    msg = BugService.delete_bug(db, bug_id, current_user)
+    return format_response(msg)
 
 
 @router.post("/bugs/{bug_id}/assign/{user_id}")
@@ -90,3 +90,13 @@ def unassign_user_to_bug(
     return format_response(
         bug, f"Successfully unassigned user {user_id} from bug {bug_id}"
     )
+
+
+@router.get("/bugs/{bug_id}/history")
+def get_bug_history(
+    bug_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    history = BugService.bug_history(bug_id, current_user, db)
+    return format_response(history, f"Successfully fetched history for bug {bug_id}")

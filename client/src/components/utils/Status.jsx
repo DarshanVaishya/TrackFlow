@@ -22,6 +22,6 @@ export default function Status({ status }) {
 	};
 
 	return (
-		<span className={"px-2 py-1 text-sm self-baseline rounded " + color[status]}>{icons[status]} {text[status]}</span>
+		<span className={"px-2 py-1 flex items-center text-sm self-baseline rounded " + color[status]}>{icons[status]} {text[status]}</span>
 	)
 }

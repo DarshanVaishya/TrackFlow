@@ -50,6 +50,7 @@ export default function LoginPage() {
 		} catch (e) {
 			const response = e.response.data
 			setError(response.message)
+			setUser(null)
 		}
 	}
 
