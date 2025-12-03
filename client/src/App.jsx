@@ -14,9 +14,13 @@ import NewProjectPage from './pages/NewProjectPage.jsx';
 import EditProjectPage from './pages/EditProjectPage.jsx';
 import axios from 'axios';
 import BugHistory from './pages/BugHistory.jsx';
+import API_BASE_URL from './api.js';
 
 export default function App() {
 	const { setUser, setLoading } = useContext(AuthContext)
+	console.log("API_BASE_URL =", API_BASE_URL);
+	console.log("VITE_API_URL =", import.meta.env.VITE_API_URL);
+
 
 	useEffect(() => {
 		const token = localStorage.getItem("accessToken");
