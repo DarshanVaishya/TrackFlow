@@ -11,6 +11,7 @@ from app.routers import comments
 from app.utils.exceptions import http_exception_handler, validation_exception_handler
 from app.routers import auth
 from app.routers import project
+from fastapi import Request
 
 settings = get_settings()
 
@@ -19,16 +20,32 @@ app = FastAPI(
     description=settings.app_description,
 )
 
+
+@app.middleware("http")
+async def log_origin(request: Request, call_next):
+    print("Origin header:", request.headers.get("origin"))
+    response = await call_next(request)
+    return response
+
+
 # Add CORS middleware
 origins = [
     "https://trackflow-frontend-production.up.railway.app",
     "http://localhost:5173",  # Vite dev
 ]
 
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=origins,
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,  # must be False with "*"
     allow_methods=["*"],
     allow_headers=["*"],
 )
