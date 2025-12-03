@@ -10,7 +10,7 @@ from app.models import User
 router = APIRouter(prefix="/projects", tags=["Projects"])
 
 
-@router.post("/")
+@router.post("")
 def create_project(
     project_data: CreateProjectPayload,
     db: Session = Depends(get_db),
@@ -30,7 +30,7 @@ def get_a_project(
     return format_response(project)
 
 
-@router.get("/")
+@router.get("")
 def get_all_projects(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
