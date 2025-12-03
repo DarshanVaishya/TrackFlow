@@ -7,6 +7,7 @@ import Spinner from "../components/utils/Spinner";
 import { BlackButton } from "../components/utils/Buttons";
 import HistoryCard from "../components/HistoryCard";
 import { History } from "lucide-react"
+import API_BASE_URL from "../../api";
 
 export default function BugHistory() {
 	const { bug_id, project_id } = useParams()
@@ -14,7 +15,7 @@ export default function BugHistory() {
 	const navigate = useNavigate()
 
 	useEffect(() => {
-		axios.get(`http://localhost:8000/bugs/${bug_id}/history`)
+		axios.get(`${API_BASE_URL}/bugs/${bug_id}/history`)
 			.then(response => {
 				setHistory(response.data.data)
 			})

@@ -5,10 +5,9 @@ import Container from "../components/utils/Container";
 import { BlackButton, BlueButton } from "../components/utils/Buttons";
 import axios from "axios";
 import BugsCard from "../components/BugsCard";
-import CountCard from "../components/utils/CountCard";
 import Spinner from "../components/utils/Spinner";
 import { Filter, Plus } from "lucide-react"
-import SelectInput from "../components/utils/SelectInput";
+import API_BASE_URL from "../../api";
 
 export default function BugsPage() {
 	const navigate = useNavigate()
@@ -24,7 +23,7 @@ export default function BugsPage() {
 
 
 	useEffect(() => {
-		axios.get(`http://localhost:8000/projects/${project_id}`).then(response => {
+		axios.get(`${API_BASE_URL}/projects/${project_id}`).then(response => {
 			const { data } = response.data
 			setProject(data)
 			setBugs(data.bugs)

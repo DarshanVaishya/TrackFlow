@@ -46,7 +46,7 @@ def update_project(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    project = ProjectService.update_project(project_id, update_data, db)
+    project = ProjectService.update_project(project_id, update_data, db, current_user)
     return format_response(project, message="Project updated successfully.")
 
 

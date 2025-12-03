@@ -5,6 +5,7 @@ import { BlueButton } from "./utils/Buttons";
 import { Pencil, Trash2 } from "lucide-react"
 import { useNavigate } from "react-router-dom";
 import TextWithBugLinks from "./utils/TextWithBugLinks";
+import API_BASE_URL from "../../api";
 
 export default function CommentCard({ comment, userId, commentsState, project_id }) {
 	const { comments, setComments } = commentsState;
@@ -13,7 +14,7 @@ export default function CommentCard({ comment, userId, commentsState, project_id
 	const navigate = useNavigate()
 
 	const handleDelete = () => {
-		axios.delete(`http://localhost:8000/comments/${comment.id}`)
+		axios.delete(`${API_BASE_URL}/comments/${comment.id}`)
 			.then(() => {
 				const agree = confirm("Do you want to DELETE this comment? This action is irreversible.")
 				if (!agree) return
@@ -23,7 +24,7 @@ export default function CommentCard({ comment, userId, commentsState, project_id
 	}
 
 	const handleUpdate = () => {
-		axios.put(`http://localhost:8000/comments/${comment.id}`, {
+		axios.put(`${API_BASE_URL}/comments/${comment.id}`, {
 			content
 		}).then(response => {
 			const updatedComment = response.data.data

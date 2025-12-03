@@ -8,6 +8,7 @@ import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import API_BASE_URL from "../../api";
 
 export default function LoginPage() {
 	const [email, setEmail] = useState("")
@@ -30,7 +31,7 @@ export default function LoginPage() {
 			params.append("password", password);
 
 			const data = await axios.post(
-				"http://localhost:8000/auth/login",
+				`${API_BASE_URL}/auth/login`,
 				params,
 				{
 					headers: {
@@ -57,7 +58,7 @@ export default function LoginPage() {
 	const handleSignUp = async (e) => {
 		e.preventDefault()
 		try {
-			await axios.post("http://localhost:8000/users", {
+			await axios.post(`${API_BASE_URL}/users`, {
 				email,
 				password
 			})

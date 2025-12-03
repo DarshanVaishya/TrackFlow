@@ -6,6 +6,7 @@ import Spinner from "./utils/Spinner"
 import axios from "axios"
 import { useEffect } from "react"
 import { useState } from "react"
+import API_BASE_URL from "../../api"
 
 const statusMapper = {
 	"todo": "Todo",
@@ -113,7 +114,7 @@ function getCardForField(history, author, user, currentUser) {
 		return (
 			<>
 				<div className="flex justify-between items-start">
-					<h2 className="font-medium">Assigned author</h2>
+					<h2 className="font-medium">Assigned User</h2>
 					<span className="text-neutral-500 text-sm">{FormatDate(history.changed_at, true)}</span>
 				</div>
 				<span className="text-neutral-500 mt-3">by {author.email}</span>
@@ -130,7 +131,7 @@ function getCardForField(history, author, user, currentUser) {
 		return (
 			<>
 				<div className="flex justify-between items-start">
-					<h2 className="font-medium">Unassigned author</h2>
+					<h2 className="font-medium">Unassigned User</h2>
 					<span className="text-neutral-500 text-sm">{FormatDate(history.changed_at, true)}</span>
 				</div>
 				<span className="text-neutral-500 mt-3">by {author.email}</span>
@@ -162,12 +163,12 @@ export default function HistoryCard({ history }) {
 	const [user, setUser] = useState(null)
 
 	useEffect(() => {
-		axios.get(`http://localhost:8000/users/${history.changed_by_id}`).then(response => setAuthor(response.data.data))
+		axios.get(`${API_BASE_URL}/users/${history.changed_by_id}`).then(response => setAuthor(response.data.data))
 	}, [history])
 
 	useEffect(() => {
 		if (history.field_name !== "assign" && history.field_name !== "unassign") return;
-		axios.get(`http://localhost:8000/users/${history.new_value}`).then(response => setUser(response.data.data))
+		axios.get(`${API_BASE_URL}/users/${history.new_value}`).then(response => setUser(response.data.data))
 	}, [history])
 
 	if (!author || !currentUser)

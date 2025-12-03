@@ -7,6 +7,7 @@ import SelectInput from "../components/utils/SelectInput";
 import { useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
+import API_BASE_URL from "../../api";
 
 export default function NewBugPage() {
 	const navigate = useNavigate()
@@ -18,7 +19,7 @@ export default function NewBugPage() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		axios.post("http://localhost:8000/bugs", {
+		axios.post(`${API_BASE_URL}/bugs`, {
 			title,
 			description,
 			status,

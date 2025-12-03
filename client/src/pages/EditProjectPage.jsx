@@ -8,6 +8,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import Spinner from "../components/utils/Spinner";
 import { Pencil, Trash2 } from "lucide-react"
+import API_BASE_URL from "../../api";
 
 export default function EditProjectPage() {
 	const navigate = useNavigate()
@@ -22,7 +23,7 @@ export default function EditProjectPage() {
 	useEffect(() => {
 		if (showModal) {
 			setLoadingUsers(true);
-			axios.get("http://localhost:8000/users")
+			axios.get(`${API_BASE_URL}/users`)
 				.then(response => {
 					setAllUsers(response.data.data); // use the data array
 					setLoadingUsers(false);
@@ -32,7 +33,7 @@ export default function EditProjectPage() {
 	}, [showModal]);
 
 	const addMember = (userId) => {
-		axios.post(`http://localhost:8000/projects/${project_id}/members/add/${userId}`)
+		axios.post(`${API_BASE_URL}/projects/${project_id}/members/add/${userId}`)
 			.then((response) => {
 				setProject(response.data.data)
 				setShowModal(false);
@@ -40,7 +41,7 @@ export default function EditProjectPage() {
 	};
 
 	const removeMember = (userId) => {
-		axios.delete(`http://localhost:8000/projects/${project_id}/members/remove/${userId}`)
+		axios.delete(`${API_BASE_URL}/projects/${project_id}/members/remove/${userId}`)
 			.then(response => {
 				setProject(response.data.data)
 			})
@@ -48,7 +49,7 @@ export default function EditProjectPage() {
 
 
 	useEffect(() => {
-		axios.get(`http://localhost:8000/projects/${project_id}`).then(response => {
+		axios.get(`${API_BASE_URL}/projects/${project_id}`).then(response => {
 			const { data } = response.data
 			setProject(data)
 			setTitle(data.title)
@@ -58,7 +59,7 @@ export default function EditProjectPage() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		axios.put(`http://localhost:8000/projects/${project_id}`, {
+		axios.put(`${API_BASE_URL}/projects/${project_id}`, {
 			title,
 			description,
 		}).then(() => {

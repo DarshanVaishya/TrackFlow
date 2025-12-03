@@ -13,6 +13,7 @@ import Spinner from "../components/utils/Spinner";
 import { UserPen, ClockPlus, CalendarClock, UserPlus, History } from "lucide-react"
 import NameCard from "../components/utils/NameCard";
 import TextWithBugLinks from "../components/utils/TextWithBugLinks";
+import API_BASE_URL from "../../api";
 
 export default function BugPage() {
 	const navigate = useNavigate()
@@ -39,7 +40,7 @@ export default function BugPage() {
 	useEffect(() => {
 		if (showModal) {
 			setLoadingUsers(true);
-			axios.get(`http://localhost:8000/projects/${project_id}/users`)
+			axios.get(`${API_BASE_URL}/projects/${project_id}/users`)
 				.then(response => {
 					setAllUsers(response.data.data);
 					setLoadingUsers(false);
@@ -49,11 +50,11 @@ export default function BugPage() {
 	}, [showModal, project_id]);
 
 	useEffect(() => {
-		axios.get(`http://localhost:8000/bugs/${bug_id}`)
+		axios.get(`${API_BASE_URL}/bugs/${bug_id}`)
 			.then(response => {
 				const bug = response.data.data
 				setBug(bug)
-				axios.get(`http://localhost:8000/users/${bug.created_by_id}`).then(response => {
+				axios.get(`${API_BASE_URL}/users/${bug.created_by_id}`).then(response => {
 					setCreator(response.data.data)
 				})
 			})
@@ -62,7 +63,7 @@ export default function BugPage() {
 				setError(data.message)
 			})
 
-		axios.get(`http://localhost:8000/bugs/${bug_id}/comments`)
+		axios.get(`${API_BASE_URL}/bugs/${bug_id}/comments`)
 			.then(response => setComments(response.data.data))
 			.catch(e => {
 				const data = e.response.data
@@ -75,7 +76,7 @@ export default function BugPage() {
 		if (!agree)
 			return
 
-		axios.delete(`http://localhost:8000/bugs/${bug_id}`).then(
+		axios.delete(`${API_BASE_URL}/bugs/${bug_id}`).then(
 			() => navigate(`/projects/${project_id}/bugs`)
 		)
 	}
@@ -165,9 +166,9 @@ export default function BugPage() {
 										try {
 											let response;
 											if (event.target.checked) {
-												response = await axios.post(`http://localhost:8000/bugs/${bug.id}/assign/${user.id}`);
+												response = await axios.post(`${API_BASE_URL}/bugs/${bug.id}/assign/${user.id}`);
 											} else {
-												response = await axios.delete(`http://localhost:8000/bugs/${bug.id}/unassign/${user.id}`);
+												response = await axios.delete(`${API_BASE_URL}/bugs/${bug.id}/unassign/${user.id}`);
 											}
 											// Update the local bug state with the response data
 											setBug(response.data.data);

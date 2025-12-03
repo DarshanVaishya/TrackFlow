@@ -7,6 +7,7 @@ import axios from "axios";
 import Spinner from "../components/utils/Spinner";
 import ProjectCard from "../components/ProjectCard";
 import { AuthContext } from "../contexts/AuthContext";
+import API_BASE_URL from "../../api";
 
 export default function ProjectsPage() {
 	const navigate = useNavigate()
@@ -14,7 +15,7 @@ export default function ProjectsPage() {
 	const { user } = useContext(AuthContext)
 
 	useEffect(() => {
-		axios.get(`http://localhost:8000/projects/user/${user.id}`).then(response => {
+		axios.get(`${API_BASE_URL}/projects/user/${user.id}`).then(response => {
 			const projects = response.data.data
 			setProjects(projects)
 		})

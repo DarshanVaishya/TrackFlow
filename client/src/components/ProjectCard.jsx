@@ -5,6 +5,7 @@ import { AuthContext } from "../contexts/AuthContext"
 import { Pencil, Trash2, Users, CircleCheckBig } from "lucide-react"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
+import API_BASE_URL from "../../api"
 
 export default function ProjectCard({ project, handleClick, setProjects, projects }) {
 	const { user } = useContext(AuthContext)
@@ -24,7 +25,7 @@ export default function ProjectCard({ project, handleClick, setProjects, project
 		e.stopPropagation()
 		const agree = confirm("Do you want to DELETE this project? All the bugs and comments inside will be permenantly deleted.")
 		if (!agree) return
-		axios.delete(`http://localhost:8000/projects/${project.id}`).then(() => {
+		axios.delete(`${API_BASE_URL}/projects/${project.id}`).then(() => {
 			setProjects(projects.filter(p => p.id !== project.id))
 			navigate("/projects")
 		})

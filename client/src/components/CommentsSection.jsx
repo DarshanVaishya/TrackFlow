@@ -4,13 +4,14 @@ import { BlueButton } from "./utils/Buttons"
 import CommentCard from "./CommentCard"
 import axios from "axios"
 import { AuthContext } from "../contexts/AuthContext"
+import API_BASE_URL from "../../api"
 
 export default function CommentsSection({ bugId, comments, setComments, project_id }) {
 	const [content, setContent] = useState("")
 	const { user } = useContext(AuthContext)
 
 	const handleSubmit = () => {
-		axios.post(`http://localhost:8000/comments`, {
+		axios.post(`${API_BASE_URL}/comments`, {
 			"content": content,
 			"bug_id": bugId
 		}).then(data => {

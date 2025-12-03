@@ -6,6 +6,7 @@ import TextInput from "../components/utils/TextInput";
 import SelectInput from "../components/utils/SelectInput";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE_URL from "../../api";
 
 export default function EditBugPage() {
 	const navigate = useNavigate()
@@ -16,7 +17,7 @@ export default function EditBugPage() {
 	const [priority, setPriority] = useState("low")
 
 	useEffect(() => {
-		axios.get(`http://localhost:8000/bugs/${bug_id}`)
+		axios.get(`${API_BASE_URL}/bugs/${bug_id}`)
 			.then(response => {
 				const bug = response.data.data
 				setTitle(bug.title)
@@ -28,7 +29,7 @@ export default function EditBugPage() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
-		axios.put(`http://localhost:8000/bugs/${bug_id}`, {
+		axios.put(`${API_BASE_URL}/bugs/${bug_id}`, {
 			title,
 			description,
 			status,
