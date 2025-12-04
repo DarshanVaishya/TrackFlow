@@ -19,6 +19,7 @@ export default function EditProjectPage() {
 	const [showModal, setShowModal] = useState(false);
 	const [allUsers, setAllUsers] = useState([]);
 	const [loadingUsers, setLoadingUsers] = useState(false);
+	const [loading, setLoading] = useState(false)
 
 	useEffect(() => {
 		if (showModal) {
@@ -59,12 +60,13 @@ export default function EditProjectPage() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
+		setLoading(true)
 		axios.put(`${API_BASE_URL}/projects/${project_id}`, {
 			title,
 			description,
 		}).then(() => {
 			navigate(`/projects`)
-		})
+		}).finally(() => setLoading(false))
 	}
 
 	const handleAddMembers = (e) => {
@@ -85,10 +87,10 @@ export default function EditProjectPage() {
 				<form className="p-5 border border-neutral-500/50 rounded min-w-xl">
 					<h1 className="text-3xl font-bold mb-5 text-center">Edit Project</h1>
 					<div className="flex flex-col">
-						<TextInput label="Title" placeholder="Project Title" value={title} onChange={e => setTitle(e.target.value)} />
+						<TextInput disabled={loading} label="Title" placeholder="Project Title" value={title} onChange={e => setTitle(e.target.value)} />
 
 						<label className="text-white self-baseline font-bold mb-2" >Description</label>
-						<textarea placeholder="Detailed description of the project" value={description} onChange={e => setDescription(e.target.value)} className="px-3 py-2 min-h-32 mb-4 border border-neutral-500/50 rounded" />
+						<textarea disabled={loading} placeholder="Detailed description of the project" value={description} onChange={e => setDescription(e.target.value)} className="px-3 py-2 min-h-32 mb-4 border border-neutral-500/50 rounded" />
 
 						<div>
 							<div className="flex justify-between items-center mb-2">
@@ -105,7 +107,7 @@ export default function EditProjectPage() {
 								</div>
 							)}
 						</div>
-						<BlueButton className="mt-5" type="submit">Update Project</BlueButton>
+						<BlueButton disabled={loading} className="mt-5" type="submit">{loading ? <Spinner size="h-5 w-5" color="border-white" /> : "Update Project"}</BlueButton>
 					</div>
 				</form>
 			</div>
@@ -116,7 +118,7 @@ export default function EditProjectPage() {
 					<div className="bg-neutral-900 p-6 rounded max-w-md w-full">
 						<h3 className="text-xl font-bold mb-5 text-white">Add Member to Project</h3>
 						{loadingUsers ? (
-							<div>Loading users...</div>
+							<Spinner />
 						) : (
 							<ul className="max-h-60 overflow-auto">
 								{allUsers

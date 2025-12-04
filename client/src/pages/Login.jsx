@@ -9,12 +9,14 @@ import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import API_BASE_URL from "../api";
+import Spinner from "../components/utils/Spinner";
 
 export default function LoginPage() {
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const [error, setError] = useState(null)
 	const [isLogin, setIsLogin] = useState(true)
+	const [loading, setLoading] = useState(false)
 	const { user, setUser } = useContext(AuthContext)
 	const navigate = useNavigate();
 
@@ -25,6 +27,7 @@ export default function LoginPage() {
 
 	const handleLogin = async (e) => {
 		e.preventDefault()
+		setLoading(true)
 		try {
 			const params = new URLSearchParams();
 			params.append("username", email);
@@ -52,6 +55,9 @@ export default function LoginPage() {
 			const response = e.response.data
 			setError(response.message)
 			setUser(null)
+		}
+		finally {
+			setLoading(false)
 		}
 	}
 
@@ -96,7 +102,7 @@ export default function LoginPage() {
 						<TextInput label="Email" type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} />
 						<TextInput label="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
 
-						<BlueButton onClick={isLogin ? handleLogin : handleSignUp}>Submit</BlueButton>
+						<BlueButton disabled={loading} onClick={isLogin ? handleLogin : handleSignUp}>{loading ? <Spinner size="h-5 w-5" color="border-white" /> : "Submit"}</BlueButton>
 						<span>{isLogin ? "Don't have an account?" : "Have an account?"}<span className="text-blue-400 self-center py-1 px-2 cursor-pointer" onClick={() => setIsLogin(!isLogin)}>{isLogin ? "Sign up" : "Login"}</span></span>
 					</form>
 				</div>

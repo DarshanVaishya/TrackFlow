@@ -7,6 +7,7 @@ import SelectInput from "../components/utils/SelectInput";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import API_BASE_URL from "../api";
+import Spinner from "../components/utils/Spinner";
 
 export default function EditBugPage() {
 	const navigate = useNavigate()
@@ -15,6 +16,7 @@ export default function EditBugPage() {
 	const [description, setDescription] = useState("")
 	const [status, setStatus] = useState("todo")
 	const [priority, setPriority] = useState("low")
+	const [loading, setLoading] = useState(false)
 
 	useEffect(() => {
 		axios.get(`${API_BASE_URL}/bugs/${bug_id}`)
@@ -29,6 +31,7 @@ export default function EditBugPage() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
+		setLoading(true)
 		axios.put(`${API_BASE_URL}/bugs/${bug_id}`, {
 			title,
 			description,
@@ -36,7 +39,7 @@ export default function EditBugPage() {
 			priority,
 		}).then(() => {
 			navigate(`/projects/${project_id}/bugs/${bug_id}`)
-		})
+		}).finally(() => setLoading(false))
 	}
 
 	return (
@@ -72,8 +75,7 @@ export default function EditBugPage() {
 								</SelectInput>
 							</div>
 						</div>
-
-						<BlueButton type="submit">Update Bug</BlueButton>
+						<BlueButton disabled={loading} type="submit">{loading ? <Spinner size="h-5 w-5" color="border-white" /> : "Update Bug"}</BlueButton>
 					</div>
 				</form>
 			</div>

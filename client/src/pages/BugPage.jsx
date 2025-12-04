@@ -90,6 +90,8 @@ export default function BugPage() {
 			<div className="pt-16">
 				{error && <div className="flex items-center justify-center"><p className="text-red-500 bg-red-800/30 mt-10 px-10 py-5 inline-block rounded-xl">{error}</p></div>}
 
+				{!bug && <Spinner />}
+
 				{!error && bug &&
 					<>
 						<div className="flex gap-5 pt-10">
@@ -155,7 +157,7 @@ export default function BugPage() {
 					<div className="bg-neutral-900 p-6 rounded max-w-md w-full">
 						<h3 className="text-xl font-bold mb-5 text-white">Add Member to Project</h3>
 						{loadingUsers ? (
-							<div>Loading users...</div>
+							<Spinner />
 						) : (
 							<form className="max-h-60 overflow-auto">
 								{allUsers.map(user => {

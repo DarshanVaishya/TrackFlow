@@ -8,6 +8,7 @@ import { useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
 import API_BASE_URL from "../api";
+import Spinner from "../components/utils/Spinner";
 
 export default function NewBugPage() {
 	const navigate = useNavigate()
@@ -15,10 +16,12 @@ export default function NewBugPage() {
 	const [description, setDescription] = useState("")
 	const [status, setStatus] = useState("todo")
 	const [priority, setPriority] = useState("low")
+	const [loading, setLoading] = useState(false)
 	const { project_id } = useParams()
 
 	const handleSubmit = (e) => {
 		e.preventDefault()
+		setLoading(true)
 		axios.post(`${API_BASE_URL}/bugs`, {
 			title,
 			description,
@@ -27,7 +30,7 @@ export default function NewBugPage() {
 			project_id: project_id
 		}).then(() => {
 			navigate(`/projects/${project_id}/bugs`)
-		})
+		}).finally(() => setLoading(false))
 	}
 
 	return (
@@ -64,7 +67,7 @@ export default function NewBugPage() {
 							</div>
 						</div>
 
-						<BlueButton type="submit">Create Bug</BlueButton>
+						<BlueButton disabled={loading} type="submit">{loading ? <Spinner /> : "Create Bug"}</BlueButton>
 					</div>
 				</form>
 			</div>

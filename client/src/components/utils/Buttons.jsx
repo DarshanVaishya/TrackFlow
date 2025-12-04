@@ -1,6 +1,6 @@
-export function BlueButton({ children, onClick = null, className = null, type = "", size = "py-2 px-4" }) {
+export function BlueButton({ children, onClick = null, className = null, type = "", size = "py-2 px-4", disabled = false }) {
 	return (
-		<button type={type} className={"bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none hover:cursor-pointer " + className + " " + size} onClick={onClick}>{children}</button>
+		<button disabled={disabled} type={type} className={"disabled:cursor-not-allowed disabled:bg-blue-500 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-700 focus:outline-none hover:cursor-pointer " + className + " " + size} onClick={onClick}>{children}</button>
 	)
 }
 
