@@ -9,6 +9,7 @@ import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
 import API_BASE_URL from "../api";
 import Spinner from "../components/utils/Spinner";
+import TextArea from "../components/utils/TextArea";
 
 export default function NewProjectPage() {
 	const navigate = useNavigate()
@@ -33,13 +34,11 @@ export default function NewProjectPage() {
 				<BlackButton onClick={() => navigate("/projects")}>← Back to Projects</BlackButton>
 			</Navbar>
 			<div className="h-screen flex justify-center items-center" onSubmit={handleSubmit}>
-				<form className="p-5 border border-neutral-500/50 rounded w-xl">
+				<form className="p-5 border border-neutral-500/50 rounded w-xl" onSubmit={handleSubmit}>
 					<h1 className="text-3xl font-bold mb-5 text-center">New Project</h1>
 					<div className="flex flex-col">
-						<TextInput label="Title" placeholder="Project Title" value={title} onChange={e => setTitle(e.target.value)} />
-
-						<label className="text-white self-baseline font-bold mb-2" >Description</label>
-						<textarea placeholder="Detailed description of the project" value={description} onChange={e => setDescription(e.target.value)} className="px-3 py-2 min-h-32 mb-4 border border-neutral-500/50 rounded" />
+						<TextInput isLoading={loading} label="Title" placeholder="Project Title" value={title} onChange={e => setTitle(e.target.value)} />
+						<TextArea isLoading={loading} label="Description" placeholder="Detailed description of the project" value={description} onChange={e => setDescription(e.target.value)} />
 						<BlueButton disabled={loading} type="submit">{loading ? <Spinner size="h-5 w-5" color="border-white" /> : "Create Project"}</BlueButton>
 					</div>
 				</form>

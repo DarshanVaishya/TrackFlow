@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import API_BASE_URL from "../api";
 import Spinner from "../components/utils/Spinner";
+import TextArea from "../components/utils/TextArea";
 
 export default function EditBugPage() {
 	const navigate = useNavigate()
@@ -19,6 +20,7 @@ export default function EditBugPage() {
 	const [loading, setLoading] = useState(false)
 
 	useEffect(() => {
+		setLoading(true)
 		axios.get(`${API_BASE_URL}/bugs/${bug_id}`)
 			.then(response => {
 				const bug = response.data.data
@@ -27,6 +29,7 @@ export default function EditBugPage() {
 				setStatus(bug.status)
 				setPriority(bug.priority)
 			})
+			.finally(() => setLoading(false))
 	}, [bug_id])
 
 	const handleSubmit = (e) => {
@@ -51,10 +54,8 @@ export default function EditBugPage() {
 				<form className="p-5 border border-neutral-500/50 rounded w-xl">
 					<h1 className="text-3xl font-bold mb-5 text-center">Edit Bug</h1>
 					<div className="flex flex-col">
-						<TextInput label="Title" placeholder="A brief description of the bug" value={title} onChange={e => setTitle(e.target.value)} />
-
-						<label className="text-white self-baseline font-bold mb-2" >Description</label>
-						<textarea placeholder="Detailed description of the bug, including steps to reproduce..." value={description} onChange={e => setDescription(e.target.value)} className="px-3 py-2 min-h-32 mb-4 border border-neutral-500/50 rounded" />
+						<TextInput isLoading={loading} label="Title" placeholder="A brief description of the bug" value={title} onChange={e => setTitle(e.target.value)} />
+						<TextArea label="Description" isLoading={loading} placeholder="Detailed description of the bug, including steps to reproduce..." value={description} onChange={e => setDescription(e.target.value)} />
 
 						<div className="flex gap-10">
 							<div className="flex flex-col">

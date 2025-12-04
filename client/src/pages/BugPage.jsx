@@ -90,7 +90,7 @@ export default function BugPage() {
 			<div className="pt-16">
 				{error && <div className="flex items-center justify-center"><p className="text-red-500 bg-red-800/30 mt-10 px-10 py-5 inline-block rounded-xl">{error}</p></div>}
 
-				{!bug && <Spinner />}
+				{!bug && <Spinner margin="mt-20" />}
 
 				{!error && bug &&
 					<>

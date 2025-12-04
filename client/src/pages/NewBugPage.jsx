@@ -9,6 +9,7 @@ import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
 import API_BASE_URL from "../api";
 import Spinner from "../components/utils/Spinner";
+import TextArea from "../components/utils/TextArea";
 
 export default function NewBugPage() {
 	const navigate = useNavigate()
@@ -42,10 +43,9 @@ export default function NewBugPage() {
 				<form className="p-5 border border-neutral-500/50 rounded w-xl">
 					<h1 className="text-3xl font-bold mb-5 text-center">New Bug</h1>
 					<div className="flex flex-col">
-						<TextInput label="Title" placeholder="A brief description of the bug" value={title} onChange={e => setTitle(e.target.value)} />
+						<TextInput isLoading={loading} label="Title" placeholder="A brief description of the bug" value={title} onChange={e => setTitle(e.target.value)} />
 
-						<label className="text-white self-baseline font-bold mb-2" >Description</label>
-						<textarea placeholder="Detailed description of the bug, including steps to reproduce..." value={description} onChange={e => setDescription(e.target.value)} className="px-3 py-2 min-h-32 mb-4 border border-neutral-500/50 rounded" />
+						<TextArea isLoading={loading} label="Description" placeholder="Detailed description of the bug, including steps to reproduce..." value={description} onChange={e => setDescription(e.target.value)} />
 
 						<div className="flex gap-10">
 							<div className="flex flex-col">

@@ -23,7 +23,6 @@ const LOGO_MAP = {
 	unassign: UserMinus
 }
 
-// Reusable header for all cards
 const CardHeader = ({ title, date, authorEmail }) => (
 	<>
 		<div className="flex flex-col sm:flex-row justify-between items-start">
@@ -34,7 +33,6 @@ const CardHeader = ({ title, date, authorEmail }) => (
 	</>
 )
 
-// Reusable old → new value comparison
 const ValueChange = ({ oldValue, newValue, className = "" }) => (
 	<div className="flex justify-between items-center gap-5 mt-5">
 		<div className="grow flex flex-col p-2 bg-neutral-800/50 rounded border border-neutral-500/30">
@@ -47,7 +45,6 @@ const ValueChange = ({ oldValue, newValue, className = "" }) => (
 	</div>
 )
 
-// Config-driven field rendering
 const FIELD_CONFIG = {
 	create: {
 		title: "Created Bug",
@@ -110,8 +107,6 @@ export default function HistoryCard({ history }) {
 		}
 	}, [history, isUserField])
 
-	if (!author || !currentUser || (isUserField && !user)) return <Spinner />
-
 	const config = FIELD_CONFIG[history.field_name]
 
 	return (
@@ -122,8 +117,12 @@ export default function HistoryCard({ history }) {
 			</div>
 
 			<div className="border border-neutral-500/50 grow p-5 rounded">
-				<CardHeader title={config.title} date={history.changed_at} authorEmail={author.email} />
-				{config.render({ history, author, user, currentUser })}
+				{(!author || !currentUser || (isUserField && !user)) ? <Spinner /> :
+					<>
+						<CardHeader title={config.title} date={history.changed_at} authorEmail={author.email} />
+						{config.render({ history, author, user, currentUser })}
+					</>
+				}
 			</div>
 		</div>
 	)

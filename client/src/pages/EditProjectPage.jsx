@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import Spinner from "../components/utils/Spinner";
 import { Pencil, Trash2 } from "lucide-react"
 import API_BASE_URL from "../api";
+import TextArea from "../components/utils/TextArea";
 
 export default function EditProjectPage() {
 	const navigate = useNavigate()
@@ -50,12 +51,13 @@ export default function EditProjectPage() {
 
 
 	useEffect(() => {
+		setLoading(true)
 		axios.get(`${API_BASE_URL}/projects/${project_id}`).then(response => {
 			const { data } = response.data
 			setProject(data)
 			setTitle(data.title)
 			setDescription(data.description)
-		})
+		}).finally(() => setLoading(false))
 	}, [project_id])
 
 	const handleSubmit = (e) => {
@@ -75,9 +77,6 @@ export default function EditProjectPage() {
 	}
 
 
-	if (!project)
-		return <Spinner />
-
 	return (
 		<Container>
 			<Navbar>
@@ -87,17 +86,16 @@ export default function EditProjectPage() {
 				<form className="p-5 border border-neutral-500/50 rounded w-xl">
 					<h1 className="text-3xl font-bold mb-5 text-center">Edit Project</h1>
 					<div className="flex flex-col">
-						<TextInput disabled={loading} label="Title" placeholder="Project Title" value={title} onChange={e => setTitle(e.target.value)} />
-
-						<label className="text-white self-baseline font-bold mb-2" >Description</label>
-						<textarea disabled={loading} placeholder="Detailed description of the project" value={description} onChange={e => setDescription(e.target.value)} className="px-3 py-2 min-h-32 mb-4 border border-neutral-500/50 rounded" />
+						<TextInput isLoading={loading} label="Title" placeholder="Project Title" value={title} onChange={e => setTitle(e.target.value)} />
+						<TextArea isLoading={loading} label="Description" placeholder={"Detailed description of the project"} value={description} onChange={e => setDescription(e.target.value)} />
 
 						<div>
 							<div className="flex justify-between items-center mb-2">
 								<h2 className="text-2xl ">Members</h2>
 								<BlueButton onClick={handleAddMembers} size="py-1 px-2">Add Members</BlueButton>
 							</div>
-							{project.members.map(user =>
+
+							{!loading && project && project.members.map(user =>
 								<div key={user.id} className="py-1 flex justify-between items-center">
 									<span>{user.email}</span>
 									{project.created_by_id == user.id ? "" :
@@ -121,7 +119,7 @@ export default function EditProjectPage() {
 							<Spinner />
 						) : (
 							<ul className="max-h-60 overflow-auto">
-								{allUsers
+								{loading ? <Spinner /> : allUsers
 									.filter(user => !project.members.some(m => m.id === user.id))
 									.map(user => (
 										<li key={user.id} className="flex justify-between items-center py-2 border-b border-neutral-700">
