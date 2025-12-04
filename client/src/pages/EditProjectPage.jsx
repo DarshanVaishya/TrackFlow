@@ -84,7 +84,7 @@ export default function EditProjectPage() {
 				<BlackButton onClick={() => navigate("/projects")}>← Back to Projects</BlackButton>
 			</Navbar>
 			<div className="min-h-screen flex justify-center items-center mt-16" onSubmit={handleSubmit}>
-				<form className="p-5 border border-neutral-500/50 rounded min-w-xl">
+				<form className="p-5 border border-neutral-500/50 rounded w-xl">
 					<h1 className="text-3xl font-bold mb-5 text-center">Edit Project</h1>
 					<div className="flex flex-col">
 						<TextInput disabled={loading} label="Title" placeholder="Project Title" value={title} onChange={e => setTitle(e.target.value)} />

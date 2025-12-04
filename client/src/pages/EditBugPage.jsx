@@ -48,7 +48,7 @@ export default function EditBugPage() {
 				<BlackButton onClick={() => navigate(`/projects/${project_id}/bugs/${bug_id}`)}>← Back to the Bug</BlackButton>
 			</Navbar>
 			<div className="h-screen flex justify-center items-center" onSubmit={handleSubmit}>
-				<form className="p-5 border border-neutral-500/50 rounded min-w-xl">
+				<form className="p-5 border border-neutral-500/50 rounded w-xl">
 					<h1 className="text-3xl font-bold mb-5 text-center">Edit Bug</h1>
 					<div className="flex flex-col">
 						<TextInput label="Title" placeholder="A brief description of the bug" value={title} onChange={e => setTitle(e.target.value)} />

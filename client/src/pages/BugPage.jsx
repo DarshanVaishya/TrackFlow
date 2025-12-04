@@ -97,18 +97,6 @@ export default function BugPage() {
 						<div className="flex gap-5 pt-10">
 							<span className="text-neutral-500 text-lg">#{bug.id}</span>
 							<div className="flex-1">
-								<div className="flex flex-col shrink-0 items-start md:flex-row gap-2">
-									{isOwner && <BlackButton onClick={() => setShowModal(true)} className="flex gap-1 shrink-0 items-center">
-										<UserPlus className="h-4 w-4" />
-										Assign Users
-									</BlackButton>}
-									{(isOwner || canEdit) && <BlueButton className="shrink-0" onClick={() => navigate(`/projects/${project_id}/bugs/${bug.id}/edit`)}>Edit Bug</BlueButton>}
-									{isOwner && <RedButton className="shrink-0" onClick={handleDelete}>Delete Bug</RedButton>}
-									<BlackButton className="flex gap-1 shrink-0 items-center mb-2" onClick={() => navigate(`/projects/${project_id}/bugs/${bug.id}/history`)}>
-										<History className="h-5 w-5" />
-										History
-									</BlackButton>
-								</div>
 								<div className="flex flex-col justify-between sm:flex-row">
 									<h1 className="text-3xl">{bug.title}</h1>
 								</div>
@@ -145,6 +133,19 @@ export default function BugPage() {
 								<span className="flex"><span className="text-neutral-500 mr-2"><ClockPlus /></span> {FormatDate(bug.created_at, true)}</span>
 								<span className="flex"><span className="text-neutral-500 mr-2"><CalendarClock /></span> {FormatDate(bug.updated_at, true)}</span>
 							</div>
+						</div>
+
+						<div className="grid grid-cols-2 auto-cols-max gap-2 md:grid-cols-4 md:max-w-2xl mt-5">
+							{isOwner && <BlackButton onClick={() => setShowModal(true)} className="flex gap-1 shrink-0 items-center">
+								<UserPlus className="h-4 w-4" />
+								Assign Users
+							</BlackButton>}
+							{(isOwner || canEdit) && <BlueButton className="shrink-0" onClick={() => navigate(`/projects/${project_id}/bugs/${bug.id}/edit`)}>Edit Bug</BlueButton>}
+							{isOwner && <RedButton className="shrink-0" onClick={handleDelete}>Delete Bug</RedButton>}
+							<BlackButton className="flex gap-1 shrink-0 items-center" onClick={() => navigate(`/projects/${project_id}/bugs/${bug.id}/history`)}>
+								<History className="h-5 w-5" />
+								History
+							</BlackButton>
 						</div>
 
 						<CommentsSection project_id={project_id} setComments={setComments} bugId={bug_id} comments={comments} />
