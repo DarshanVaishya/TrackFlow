@@ -8,9 +8,11 @@ import API_BASE_URL from "../api"
 
 export default function CommentsSection({ bugId, comments, setComments, project_id }) {
 	const [content, setContent] = useState("")
+	const [loading, setLoading] = useState(false)
 	const { user } = useContext(AuthContext)
 
 	const handleSubmit = () => {
+		setLoading(true)
 		axios.post(`${API_BASE_URL}/comments`, {
 			"content": content,
 			"bug_id": bugId
@@ -18,7 +20,7 @@ export default function CommentsSection({ bugId, comments, setComments, project_
 			const newComment = data.data.data
 			setContent("")
 			setComments([...comments, newComment])
-		})
+		}).finally(() => setLoading(false))
 	}
 
 	if (!comments)
@@ -37,7 +39,7 @@ export default function CommentsSection({ bugId, comments, setComments, project_
 				<div>
 					<textarea className="w-full p-2 rounded border border-neutral-600/50 bg-black text-white focus:outline-none focus:ring-1 focus:ring-blue-500 min-h-32" value={content} onChange={e => setContent(e.target.value)} placeholder="Add a comment..." />
 				</div>
-				<BlueButton onClick={handleSubmit} className="mt-3">Post Comment</BlueButton>
+				<BlueButton onClick={handleSubmit} className="mt-3">{loading ? <Spinner size="h-5 w-5" color="border-white" /> : "Post Comment"}</BlueButton>
 			</div>
 
 			{/* Comments */}

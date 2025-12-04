@@ -67,7 +67,7 @@ export default function NewBugPage() {
 							</div>
 						</div>
 
-						<BlueButton disabled={loading} type="submit">{loading ? <Spinner /> : "Create Bug"}</BlueButton>
+						<BlueButton disabled={loading} type="submit">{loading ? <Spinner size="h-5 w-5" color="border-white" /> : "Create Bug"}</BlueButton>
 					</div>
 				</form>
 			</div>

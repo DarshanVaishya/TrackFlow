@@ -64,7 +64,7 @@ export default function BugsPage() {
 				</Navbar>
 
 				<div className="pt-18 flex flex-col gap-5">
-					<div className="flex justify-between items-center">
+					<div className="flex flex-col justify-between items-start md:flex-row">
 						<h1 className="text-4xl font-bold pt-5 capitalize">Project: {project.title}</h1>
 						<BlueButton className="flex items-center mt-5" onClick={() => navigate(`/projects/${project_id}/bugs/new`)} >
 							<Plus />

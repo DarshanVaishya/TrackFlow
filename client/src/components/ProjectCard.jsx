@@ -49,7 +49,7 @@ export default function ProjectCard({ project, handleClick, setProjects, project
 					</div> </div>
 
 				<p className="text-base text-neutral-400 mb-2">{project.description}</p>
-				<div className="flex gap-5">
+				<div className="flex flex-col gap-2 md:flex-row md:gap-5">
 					<span className="flex gap-2 items-center text-neutral-400">
 						<Bug className="h-5 w-5 text-red-700" />
 						{project.bugs.length} bugs
