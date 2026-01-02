@@ -23,7 +23,7 @@ app = FastAPI(
 
 # Add CORS middleware
 origins = [
-    "https://trackflow-frontend-production.up.railway.app",
+    "https://https://trackflow.darshanv.dev",
     "http://localhost:5173",
 ]
 
