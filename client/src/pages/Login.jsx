@@ -99,7 +99,7 @@ export default function LoginPage() {
 						<TextInput isLoading={loading} label="Email" type="email" placeholder="you@example.com" value={email} onChange={e => setEmail(e.target.value)} />
 						<TextInput isLoading={loading} label="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
 
-						<BlueButton disabled={loading} onClick={isLogin ? handleLogin : handleSignUp}>{loading ? <Spinner size="h-5 w-5" color="border-white" /> : "Submit"}</BlueButton>
+						<BlueButton disabled={loading} type="submit">{loading ? <Spinner size="h-5 w-5" color="border-white" /> : "Submit"}</BlueButton>
 						<span>{isLogin ? "Don't have an account?" : "Have an account?"}<span className="text-blue-400 self-center py-1 px-2 cursor-pointer" onClick={() => setIsLogin(!isLogin)}>{isLogin ? "Sign up" : "Login"}</span></span>
 					</form>
 				</div>

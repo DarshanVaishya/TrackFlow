@@ -93,6 +93,12 @@ class CommentService:
     ):
         comment = CommentService.get_comment_by_id(db, comment_id)
         logger.debug(f"Updating comment ID - {comment_id}")
+
+        if current_user.id != comment.created_by_id:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Unauthorized access. Only comment author can edit it.",
+            )
         try:
             update_dict = comment_data.model_dump(exclude_unset=True)
             content = update_dict["content"]
